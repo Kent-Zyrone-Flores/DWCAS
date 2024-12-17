@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Appointment;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
@@ -23,5 +23,25 @@ class HistoryController extends Controller
             'appointments' => $appointments,
             'totalRevenue' => $totalRevenue
         ]);
+=======
+use Illuminate\Http\Request;
+
+class HistoryController extends Controller
+{
+    public function index(){
+        return view('history');
+    }
+
+    public function filter(Request $request)
+    {
+        $status = $request->query('status');
+
+        // Fetch data based on status, or all if 'all' is selected
+        $appointments = ($status && $status !== 'all')
+            ? Appointment::where('status', $status)->get()
+            : Appointment::all();
+
+        return response()->json($appointments);
+>>>>>>> 4ad902e4ad6a94992c2e27838c83111cd63080df
     }
 }

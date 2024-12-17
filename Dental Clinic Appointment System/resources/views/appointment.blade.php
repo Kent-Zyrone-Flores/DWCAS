@@ -102,7 +102,11 @@
         <div class="profile-section">
             <img src="https://via.placeholder.com/80?text=Photo" alt="Profile Photo" class="profile-photo">
             <div class="name">Admin Name</div>
-            <div class="email">admin@example.com</div>
+            <div class="email"> @if (Auth::check())
+                <p>Hello, {{ Auth::user()->email }}</p>
+            @else
+                <p>Welcome, Guest!</p>
+            @endif</div>
         </div><hr>
 
         <!-- Navigation Links -->
@@ -111,9 +115,13 @@
             <a href="{{ route('appointments') }}" class="nav-link">Appointments</a>
             <a href="{{ route('reports') }}" class="nav-link">Reports</a>
             <a href="{{ route('history') }}" class="nav-link">History</a>
-        </div><hr><br><br><br><br><br>
-
-        <div class="logout-btn"><a href="landingpage" class="text-white text-decoration-none">Logout</a></div>
+        </div><hr>
+        <div class="logout-btn">
+            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit" class="logout-btn text-white text-decoration-none">Logout</button>
+            </form>  
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -154,13 +162,14 @@
                             <td>{{ $appointment->service }}</td>
                             <td>{{ $appointment->amount }}</td>
                             <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
-                            <td>{{ $appointment->time }}</td>
+                            <td>{{ date('h:i A', strtotime($appointment->time)) }}</td>
                             <td>{{ $appointment->status }}</td>
                             
                             <td class="status-column">
     <select class="status-dropdown" data-id="{{ $appointment->id }}">
-        <option value="Canceled" {{ $appointment->status == 'Cancel' ? 'selected' : '' }}>Cancel</option>
-        <option value="Confirmed" {{ $appointment->status == 'Confirm' ? 'selected' : '' }}>Confirm</option>
+        <option value="Cancelled" {{ $appointment->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+        <option value="Confirmed" {{ $appointment->status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+        <option value="No show" {{ $appointment->status == 'No show' ? 'selected' : '' }}>No Show</option>
     </select>
 
 <button class="btn btn-primary btn-sm reschedule-btn" data-id="{{ $appointment->id }}" data-name="{{ $appointment->name }}" data-date="{{ $appointment->date }}" data-time="{{ $appointment->time }}">
@@ -188,15 +197,28 @@
             <label for="rescheduleName">Name</label>
             <input type="text" id="rescheduleName" name="name" readonly>
 <br><br>
-            <label for="rescheduleDate">New Date</label>
-            <input type="date" id="rescheduleDate" name="date" required>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
+
+            
 <br><br>
             <label for="rescheduleTime">New Time</label>
             <select id="rescheduleTime" name="time" required>
-                <option value="8:00 AM">8:00 AM</option>
-                <option value="12:00 PM">12:00 PM</option>
-                <option value="3:00 PM">3:00 PM</option>
-                <option value="6:00 PM">6:00 PM</option>
+                <script>
+                    const startHour = 8; // 8:00 AM
+                    const endHour = 17; // 5:00 PM
+                    const timeDropdown = document.getElementById('rescheduleTime');
+            
+                    for (let hour = startHour; hour <= endHour; hour++) {
+                        const ampm = hour < 12 ? 'AM' : 'PM';
+                        const displayHour = hour > 12 ? hour - 12 : hour; // Convert to 12-hour format
+                        const time = `${displayHour}:00 ${ampm}`;
+                        const option = document.createElement('option');
+                        option.value = time;
+                        option.textContent = time;
+                        timeDropdown.appendChild(option);
+                    }
+                </script>
             </select>
             <br><br>
             <button type="submit" class="btn btn-success">Save Changes</button>
@@ -304,27 +326,28 @@
 
     // Function to update appointment status via AJAX
     function updateStatus(appointmentId, newStatus) {
-        fetch(`/appointments/update-status/${appointmentId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security
-            },
-            body: JSON.stringify({ status: newStatus })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Status updated successfully!');
-            } else {
-                alert('Error updating status');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating the status.');
-        });
-    }
+    fetch("{{ route('appointments.updateStatus') }}", {  // Call named route
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ id: appointmentId, status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Status updated successfully!');
+            location.reload(); // Reload to reflect changes
+        } else {
+            alert('Error updating status');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the status.');
+    });
+}
 
     // Function to delete an appointment via AJAX
     function deleteAppointment(appointmentId) {
