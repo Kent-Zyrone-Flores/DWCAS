@@ -13,7 +13,7 @@ use App\Http\Controllers\AuthController;
 use App\Models\Appointment;
 
 
-// Public Routes (Accessible to Guests)
+
 // Public Routes (Accessible to Guests)
 Route::middleware('guest')->group(function () {
     Route::get('/landingpage', function () { 

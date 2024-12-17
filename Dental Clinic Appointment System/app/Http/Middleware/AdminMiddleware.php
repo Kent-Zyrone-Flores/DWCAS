@@ -16,6 +16,6 @@ class AdminMiddleware
         }
 
         // If not an admin, redirect to user page
-        return redirect()->route('dashboard');
+        return redirect()->route('user');
     }
 }

@@ -223,25 +223,38 @@
         <input type="text" id="amount" name="amount" placeholder="Amount" readonly required>
 
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" required>
+        <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
+        
+{{-- 
+    <script>
+        // Set today's date as the minimum selectable date
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+
+            // Format the date as YYYY-MM-DD
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const minDate = `${year}-${month}-${day}`;
+            dateInput.setAttribute('min', minDate);
+        });
+    </script> --}}
+
 
         <label for="time">Time</label>
         <select type="text" id="time" name="time" required>
-          <script>
-            const startHour = 8; // 8:00 AM
-            const endHour = 17; // 5:00 PM
-            const timeDropdown = document.getElementById('time');
-    
-            for (let hour = startHour; hour <= endHour; hour++) {
-                const ampm = hour < 12 ? 'AM' : 'PM';
-                const displayHour = hour > 12 ? hour - 12 : hour; // Convert to 12-hour format
-                const time = `${displayHour}:00 ${ampm}`;
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                timeDropdown.appendChild(option);
-            }
-        </script>
+          <option value="8:00">8:00 AM</option>
+          <option value="9:00">9:00 AM</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="12:00">12:00 PM</option>
+          <option value="13:00">1:00 PM</option>
+          <option value="14:00">2:00 PM</option>
+          <option value="15:00">3:00 PM</option>
+          <option value="16:00">4:00 PM</option>
+          <option value="17:00">5:00 PM</option>
         </select>
 
         <center>
@@ -349,7 +362,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      const viewButtons = document.querySelectorAll('.view-button');
+      const viewButtons = document.querySelectorAll('.view-button modal-button');
       const modal = document.getElementById('appointmentModal');
       const modalDetails = document.getElementById('modal-details');
       const closeModal = document.getElementById('closeModal');

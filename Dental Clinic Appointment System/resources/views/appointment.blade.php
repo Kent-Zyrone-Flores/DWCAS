@@ -197,8 +197,10 @@
             <label for="rescheduleName">Name</label>
             <input type="text" id="rescheduleName" name="name" readonly>
 <br><br>
-            <label for="rescheduleDate">New Date</label>
-            <input type="date" id="rescheduleDate" name="date" required>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
+
+            
 <br><br>
             <label for="rescheduleTime">New Time</label>
             <select id="rescheduleTime" name="time" required>
