@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px 0;
+}
+.profile-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.profile-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-bottom: 10px;
+}
+.profile-section .name, .profile-section .email {
+    display: block;
+}
+.nav-links {
+    margin-bottom: 20px;
+}
+.nav-links a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+.nav-links a:hover {
+    background-color: #575757;
+}
+.logout-btn {
+    background-color: green;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+.logout-btn a {
+    color: white;
+    text-decoration: none;
+}
+.logout-btn:hover {
+    background-color: darkgreen;
+}
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+.revenue-list, .calendar, .patient-table {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.calendar th, .calendar td {
+    text-align: center;
+    color: green;
+}
+.calendar .today {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+}
