@@ -87,17 +87,13 @@
     <div class="sidebar">
         <div class="profile-section">
             <img src="https://via.placeholder.com/80?text=Photo" alt="Profile Photo" class="profile-photo">
-<<<<<<< HEAD
-            <div class="name">DWC ADMIN</div>
-            <div class="email">dentalworldclinic@admin.com</div>
-=======
             <div class="name">Admin Name</div>
             <div class="email"> @if (Auth::check())
                 <p>{{ Auth::user()->email }}</p>
             @else
                 <p>Welcome, Guest!</p>
             @endif</div>
->>>>>>> 4ad902e4ad6a94992c2e27838c83111cd63080df
+
         </div><hr>
 
         <div class="nav-links">
@@ -213,7 +209,7 @@
         </div>
         <br>
         <div class="history-table">
-            <h4>History List</h4>
+            <h4>Patient List</h4>
             <table class="table table-bordered">
                 <thead>
                     <tr>
