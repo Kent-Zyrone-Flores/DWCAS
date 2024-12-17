@@ -183,21 +183,65 @@
   const printPdfButton = document.getElementById('printPdfButton');
 
   printPdfButton.addEventListener('click', function () {
-    const { jsPDF } = window.jspdf; // Access jsPDF from the global window object
-    const pdf = new jsPDF();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
 
-    // Add receipt details to the PDF
-    const details = receiptDetails.innerHTML.replace(/<br>/g, '\n').replace(/<strong>/g, '').replace(/<\/strong>/g, '');
-    pdf.text(details, 10, 10);
+  // Clinic Information
+  const clinicName = "Dental World Clinic";
+  const clinicAddress = "Poblacion, Tagoloan Misamis Oriental, 9001";
+  const clinicContact = "Contact: 0917-885-5153";
 
-    // Convert the QR code canvas to an image and add it to the PDF
-    const qrCanvas = document.getElementById('qrCodeCanvas');
-    const qrImage = qrCanvas.toDataURL('image/png');
-    pdf.addImage(qrImage, 'PNG', 10, 50, 50, 50);
+  // Add a logo (Optional)
+  const logoUrl = "Documentation/logo.png"; // Ensure the path is correct and hosted publicly
+  pdf.addImage(logoUrl, 'PNG', 10, 10, 30, 30);
 
-    // Save or open the PDF
-    pdf.save('receipt.pdf');
+  // Title and Clinic Info
+  pdf.setFontSize(18);
+  pdf.setFont("helvetica", "bold");
+  pdf.text(clinicName, 45, 20); // Align next to logo
+  pdf.setFontSize(10);
+  pdf.setFont("helvetica", "normal");
+  pdf.text(clinicAddress, 45, 26);
+  pdf.text(clinicContact, 45, 32);
+
+  // Receipt Title
+  pdf.setFontSize(14);
+  pdf.text("Appointment Receipt", 105, 50, null, null, "center");
+
+  // Receipt Details
+  const details = [
+    { label: "Name", value: document.getElementById('name').value },
+    { label: "Phone", value: document.getElementById('phone').value },
+    { label: "Address", value: document.getElementById('address').value },
+    { label: "Service", value: serviceSelect.options[serviceSelect.selectedIndex].text },
+    { label: "Amount", value: amountInput.value },
+    { label: "Date", value: document.getElementById('date').value },
+    { label: "Time", value: document.getElementById('time').value },
+  ];
+
+  let yPos = 60;
+  pdf.setFontSize(12);
+  details.forEach(item => {
+    pdf.setFont("helvetica", "bold");
+    pdf.text(`${item.label}:`, 20, yPos);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`${item.value}`, 60, yPos);
+    yPos += 8;
   });
+
+  // QR Code
+  const qrCanvas = document.getElementById('qrCodeCanvas');
+  const qrImage = qrCanvas.toDataURL('image/png');
+  pdf.addImage(qrImage, 'PNG', 80, yPos + 10, 50, 50); // Position below details
+
+  // Footer
+  pdf.setFontSize(10);
+  pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 70, null, null, "center");
+
+  // Save PDF
+  pdf.save('receipt.pdf');
+});
+
 </script>
 <script>
   function removeRow(button, id) {

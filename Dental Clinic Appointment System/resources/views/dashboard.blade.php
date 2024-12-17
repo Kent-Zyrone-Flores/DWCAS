@@ -74,7 +74,11 @@
         }
         .calendar .today {
             background-color: #ffeb3b; /* Highlight today's date */
-        }
+        }.hide-amount {
+    display: none;
+}
+
+
     </style>
 </head>
 <body>
@@ -83,8 +87,8 @@
     <div class="sidebar">
         <div class="profile-section">
             <img src="https://via.placeholder.com/80?text=Photo" alt="Profile Photo" class="profile-photo">
-            <div class="name">Admin Name</div>
-            <div class="email">admin@example.com</div>
+            <div class="name">DWC ADMIN</div>
+            <div class="email">dentalworldclinic@admin.com</div>
         </div><hr>
 
         <div class="nav-links">
@@ -98,28 +102,36 @@
         <div class="logout-btn"><a href="landingpage" class="text-white text-decoration-none">Logout</a></div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <h1>Welcome to the Dental World</h1>
+        <br>
 
-        <!-- Revenue List and Calendar Section -->
         <div class="row">
-            <!-- Revenue List (Left Column) -->
-            <div class="col-md-6">
-                <h4>Revenue List</h4>
-                <div class="revenue-list">
-                    <ul>
 
-                    <li>50,000</li>
-                        @foreach($revenues as $revenue)
-                            <li>Revenue: ₱{{ $revenue->amount }}</li>
-                            <td>{{ $appointment->amount }}</td>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
+<div class="col-md-6">                    
+    <h2>Revenue List</h2>
 
-            <!-- Calendar (Right Column) -->
+    <div class="revenue-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd;">
+        <table class="table table-bordered">
+            <thead>
+                
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach($appointments as $appointment)
+                    <tr>
+                    <td>{{ $appointment->amount }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="total-revenue">
+    <h4>Total Revenue: ₱0.00</h4>
+</div>
+</div>
             <div class="col-md-6">
                 <div class="calendar">
                     <h4>Calendar</h4>
@@ -186,37 +198,39 @@
                 </div>
             </div>
         </div>
-
-        <!-- Patient List -->
-        <div class="patient-table">
-            <h4>Patient List</h4>
+        <br>
+        <div class="history-table">
+            <h4>History List</h4>
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Patient ID</th>
-                        <th>Name</th>
-                        <th>Contact</th>
+                        <th><id="selectAll"></th>
+                        <th>Appointment ID</th>
+                        <th>Patient Name</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loop through the appointments data passed from the controller -->
                     @foreach($appointments as $appointment)
                         <tr>
+                            <td><ata-id="{{ $appointment->id }}"></td>
                             <td>{{ $appointment->id }}</td>
-                            <td>{{ $appointment->name }}</td> <!-- Ensure patient name is displayed -->
-                            <td>{{ $appointment->phone_number }}</td>
-                            <td>{{ $appointment->address }}</td>
+                            <td>{{ $appointment->name }}</td>
                             <td>{{ $appointment->service }}</td>
-                            <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
-                            <td>{{ $appointment->time }}</td>
                             <td>{{ $appointment->status }}</td>
+                            <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
+                            <td class="hide-amount">{{ $appointment->amount }}</td>
+                            <td>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+</div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const today = new Date();
@@ -231,11 +245,9 @@
         });
     </script>
     <script>
-    // Function to calculate and update total revenue
     function updateTotalRevenue() {
         let totalRevenue = 0;
         
-        // Iterate through each row in the table to sum up the revenue values
         $('table tbody tr').each(function() {
             const revenue = parseFloat($(this).find('td:nth-child(7)').text().replace('₱', '').trim());
             if (!isNaN(revenue)) {
@@ -243,23 +255,35 @@
             }
         });
         
-        // Update the total revenue display
         $('.total-revenue h4').text(`Total Revenue: ₱${totalRevenue.toFixed(2)}`);
     }
 
-    // Call the updateTotalRevenue function after the page loads
     $(document).ready(function() {
         updateTotalRevenue();
     });
 
-    // Optional: You can call updateTotalRevenue again if any updates occur, such as deleting a report
-    // For example, after deleting a report:
-    // deleteReports() {
-    //    // After successful deletion
-    //    updateTotalRevenue();
-    // }
 </script>
+<script>
+    function calculateTotalRevenue() {
+        let total = 0; 
 
+        document.querySelectorAll('.history-table tbody tr').forEach(row => {
+            const revenueCell = row.cells[6]; 
+            
+            if (revenueCell) {
+                const amount = parseFloat(revenueCell.innerText.replace('₱', '').replace(',', '').trim());
+                
+                if (!isNaN(amount)) {
+                    total += amount; 
+                }
+            }
+        });
 
-</body>
+        document.querySelector('.total-revenue h4').innerText = 'Total Revenue: ₱' + total.toFixed(2);
+    }
+
+    window.addEventListener('load', calculateTotalRevenue);
+    </script>
+    </body>
 </html>
+

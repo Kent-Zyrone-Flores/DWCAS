@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/appointment.css">
+    <link rel="stylesheet" href="css/history.css">
     <title>History</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
@@ -110,13 +110,14 @@
 
         <!-- Control buttons for Create, Update, Delete, and Print -->
         <div class="control-buttons">
-            <button class="btn btn-warning" onclick="updateReport()">Update</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createReportModal">Create Report</button>
+        <button class="btn btn-warning" onclick="updateReport()">Update</button>
             <button class="btn btn-danger" id="deleteReportsBtn">Delete</button>
             <button class="btn btn-info" onclick="printReport()">Print Report</button>
         </div>
 
         <div class="history-table">
-            <h4>History List</h4>
+            <h1>History List</h1>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -126,7 +127,7 @@
                         <th>Service</th>
                         <th>Status</th>
                         <th>Date</th>
-                        <th>Revenue</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -146,14 +147,8 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Total Revenue -->
-        <div class="total-revenue">
-            <h4>Total Revenue: ₱{{ $totalRevenue }}</h4>
-        </div>
+</div>
     </div>
-
-    <!-- Modal for Create Report -->
     <div class="modal fade" id="createReportModal" tabindex="-1" aria-labelledby="createReportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -189,15 +184,35 @@
             </div>
         </div>
     </div>
+    <script>
+    function calculateTotalRevenue() {
+        let total = 0; 
+
+        document.querySelectorAll('.history-table tbody tr').forEach(row => {
+            const revenueCell = row.cells[6]; 
+            
+            if (revenueCell) {
+                const amount = parseFloat(revenueCell.innerText.replace('₱', '').replace(',', '').trim());
+                
+                if (!isNaN(amount)) {
+                    total += amount; 
+                }
+            }
+        });
+
+        document.querySelector('.total-revenue h4').innerText = 'Total Revenue: ₱' + total.toFixed(2);
+    }
+
+    window.addEventListener('load', calculateTotalRevenue);
+</script>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Function to update report (just an alert for now)
         function updateReport() {
             alert("Update functionality to be implemented");
         }
 
-        // Function to delete selected reports
         function deleteReports() {
             const selectedIds = [];
             $('.appointment-checkbox:checked').each(function() {
@@ -206,7 +221,7 @@
 
             if (selectedIds.length > 0) {
                 $.ajax({
-                    url: '/delete-reports',  // Adjust this URL based on your backend route for deleting reports
+                    url: '/delete-reports', 
                     method: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -214,7 +229,7 @@
                     },
                     success: function(response) {
                         alert('Reports deleted successfully');
-                        location.reload();  // Reload the page to update the table
+                        location.reload(); 
                     },
                     error: function(error) {
                         alert('An error occurred while deleting reports');
@@ -225,7 +240,6 @@
             }
         }
 
-        // Function to print report
         function printReport() {
             const content = document.querySelector('.history-table').outerHTML;
             const printWindow = window.open('', '', 'height=400,width=800');
@@ -236,18 +250,14 @@
             printWindow.print();
         }
 
-        // Select/Deselect all checkboxes
         document.getElementById('selectAll').addEventListener('click', function(event) {
             const checkboxes = document.querySelectorAll('.appointment-checkbox');
             checkboxes.forEach(checkbox => checkbox.checked = event.target.checked);
         });
 
-        // Event listener for delete button
         document.getElementById('deleteReportsBtn').addEventListener('click', deleteReports);
     </script>
 
-    <!-- Bootstrap JS for Modal and Dropdown functionality -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
