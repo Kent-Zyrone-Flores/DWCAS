@@ -84,7 +84,11 @@
         <div class="profile-section">
             <img src="https://via.placeholder.com/80?text=Photo" alt="Profile Photo" class="profile-photo">
             <div class="name">Admin Name</div>
-            <div class="email">admin@example.com</div>
+            <div class="email"> @if (Auth::check())
+                <p>{{ Auth::user()->email }}</p>
+            @else
+                <p>Welcome, Guest!</p>
+            @endif</div>
         </div><hr>
 
         <div class="nav-links">
@@ -93,9 +97,13 @@
             <a href="{{ route('reports') }}" class="nav-link">Reports</a>
             <a href="{{ route('history') }}" class="nav-link">History</a>
             
-        </div><hr><br><br><br><br><br>
-
-        <div class="logout-btn"><a href="landingpage" class="text-white text-decoration-none">Logout</a></div>
+        </div><hr>
+        <div class="logout-btn">
+            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit" class="logout-btn text-white text-decoration-none">Logout</button>
+            </form>  
+        </div>
     </div>
 
     <!-- Main Content -->

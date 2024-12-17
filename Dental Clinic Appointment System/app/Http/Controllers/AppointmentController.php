@@ -69,19 +69,30 @@ class AppointmentController extends Controller
         return redirect()->route('appointment')->with('success', 'Appointment created successfully!');
     }
 
-    public function updateStatus($id, Request $request)
+    public function updateStatus(Request $request)
     {
-        $appointment = Appointment::find($id);
-
-        if (!$appointment) {
-            return response()->json(['success' => false, 'message' => 'Appointment not found']);
+        // Validate incoming data
+        $request->validate([
+            'id' => 'required|integer',
+            'status' => 'required|string'
+        ]);
+    
+        try {
+            // Find the appointment by ID
+            $appointment = Appointment::findOrFail($request->id);
+    
+            // Update the status
+            $appointment->status = $request->status;
+            $appointment->save();
+    
+            // Return success response
+            return response()->json(['success' => true, 'message' => 'Status updated successfully']);
+        } catch (\Exception $e) {
+            // Handle errors
+            return response()->json(['success' => false, 'message' => 'Failed to update status']);
         }
-
-        $appointment->status = $request->input('status');
-        $appointment->save();
-
-        return response()->json(['success' => true]);
     }
+    
 
     public function reschedule(Request $request)
     {
@@ -115,36 +126,15 @@ class AppointmentController extends Controller
         return response()->json(['success' => true, 'message' => 'Appointment rescheduled successfully!']);
     }
 
-    /**
-     * Handle the delete request for the appointment.
-     */
     public function destroy($id)
     {
-        $appointment = Appointment::find($id); // Find the appointment by ID
+        $appointment = Appointment::find($id);
 
         if (!$appointment) {
-            return response()->json(['message' => 'Appointment not found.'], 404); // Return 404 if not found
+            return redirect()->route('appointments.index')->with('error', 'Appointment not found.');
         }
 
-        $appointment->delete(); // Delete the appointment
-
-        return response()->json(['message' => 'Appointment deleted successfully.'], 200); // Return success response
-    }
-    public function delete($id)
-{
-    try {
-        // Find the appointment by ID
-        $appointment = Appointment::findOrFail($id);
-        
-        // Delete the appointment
         $appointment->delete();
-        
-        // Return a success response
-        return response()->json(['success' => 'Appointment deleted successfully']);
-    } catch (\Exception $e) {
-        // Handle any errors
-        return response()->json(['error' => 'Failed to delete the appointment'], 500);
+        return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
-}
-
 }

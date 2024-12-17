@@ -6,6 +6,99 @@
   <title>Dental World Clinic</title>
   <link rel="stylesheet" href="css/user.css">
   <style>
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /* Modal Card */
+    .modal-card {
+        background: #ffffff;
+        width: 450px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        text-align: center;
+        animation: slideIn 0.4s ease-in-out;
+    }
+
+    .modal-header h2 {
+        font-family: Arial, sans-serif;
+        margin-bottom: 10px;
+    }
+
+    .modal-body p {
+        text-align: left;
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    /* Buttons */
+    .modal-button {
+        padding: 8px 15px;
+        margin: 5px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .print-btn {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .print-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .cancel-btn {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .cancel-btn:hover {
+        background-color: #c82333;
+    }
+
+    /* Close Modal Button */
+    .close-modal {
+        float: right;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #aaa;
+        transition: color 0.3s;
+    }
+
+    .close-modal:hover {
+        color: #000;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-30px); }
+        to { transform: translateY(0); }
+    }
+</style>
+
+  <style>
     /* Modal styles */
     .modal {
       display: none;
@@ -55,7 +148,13 @@
             <span>Dental World Clinic</span>
           </a>
         </div>
+        
         <ul>
+          <div  class="email"> @if (Auth::check())
+            <p>Hello, {{ Auth::user()->email }}</p>
+        @else
+            <p>Welcome, Guest!</p>
+        @endif</div>
         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
             @csrf
             <button type="submit">Logout</button>
@@ -81,14 +180,35 @@
       <h2>Book Appointment</h2>
       <form method="POST" action="{{ route('user.submit') }}" id="appointmentForm">
         @csrf
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Full Name" required>
-
-        <label for="phone">Contact No.</label>
-        <input type="tel" id="phone" name="phone" placeholder="Contact Number" required>
-
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" placeholder="Address" required>
+        <label for="name">Full Name</label>
+                  <input 
+                      type="text" 
+                      id="name" 
+                      name="name" 
+                      value="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}" 
+                      placeholder="Full Name" 
+                      required
+                  >
+  
+                  <label for="phone">Contact No.</label>
+                  <input 
+                      type="tel" 
+                      id="phone" 
+                      name="phone" 
+                      value="{{ Auth::user()->phone }}" 
+                      placeholder="Contact Number" 
+                      required
+                  >
+  
+                  <label for="address">Address</label>
+                  <input 
+                      type="text" 
+                      id="address" 
+                      name="address" 
+                      value="{{ Auth::user()->address }}" 
+                      placeholder="Address" 
+                      required
+                  >
 
         <label for="service">Service</label>
         <select id="service" name="service" required>
@@ -107,11 +227,21 @@
 
         <label for="time">Time</label>
         <select type="text" id="time" name="time" required>
-          <option value="12:00 PM">12:00 PM</option>
-          <option value="1:00 PM">1:00 PM</option>
-          <option value="8:00 AM">8:00 AM</option>
-          <option value="6:00 PM">6:00 PM</option>
-          <option value="3:00 PM">3:00 PM</option>
+          <script>
+            const startHour = 8; // 8:00 AM
+            const endHour = 17; // 5:00 PM
+            const timeDropdown = document.getElementById('time');
+    
+            for (let hour = startHour; hour <= endHour; hour++) {
+                const ampm = hour < 12 ? 'AM' : 'PM';
+                const displayHour = hour > 12 ? hour - 12 : hour; // Convert to 12-hour format
+                const time = `${displayHour}:00 ${ampm}`;
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                timeDropdown.appendChild(option);
+            }
+        </script>
         </select>
 
         <center>
@@ -120,47 +250,81 @@
       </form>
     </div>
 
+    
     <div class="booking-container">
       <h2>Booking Appointments</h2>
       <table class="appointment-table" id="bookingTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone Number</th>
-            <th>Address</th>
-            <th>Service</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($appointments as $appointment)
-            <tr>
-              <td>{{ $appointment->name }}</td>
-              <td>{{ $appointment->phone }}</td>
-              <td>{{ $appointment->address }}</td>
-              <td>{{ $appointment->service }}</td>
-              <td>{{ $appointment->amount }}</td>
-              <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
-              <td>{{ $appointment->time }}</td>
-              <td>{{ $appointment->status }}</td>
-              <td>
-  <button 
-    class="cancel-button" 
-    onclick="removeRow(this, '{{ $appointment->id }}')"
-  >
-    Cancel
-  </button>
-</td>
-
-            </tr>
-          @endforeach
-        </tbody>
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Phone Number</th>
+                  <th>Address</th>
+                  <th>Service</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              @foreach($appointments as $appointment)
+              <tr>
+                  <td>{{ $appointment->name }}</td>
+                  <td>{{ $appointment->phone }}</td>
+                  <td>{{ $appointment->address }}</td>
+                  <td>{{ $appointment->service }}</td>
+                  <td>{{ $appointment->amount }}</td>
+                  <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
+                  <td>{{ date('h:i A', strtotime($appointment->time)) }}</td>
+                  <td>{{ $appointment->status }}</td>
+                  <td>
+                      <button 
+                          class="cancel-button modal-button" 
+                          onclick="removeRow(this, '{{ $appointment->id }}')"
+                      >
+                          Cancel
+                      </button>
+                      <button 
+                          class="view-button modal-button" 
+                          data-name="{{ $appointment->name }}"
+                          data-phone="{{ $appointment->phone }}"
+                          data-address="{{ $appointment->address }}"
+                          data-service="{{ $appointment->service }}"
+                          data-amount="{{ $appointment->amount }}"
+                          data-date="{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}"
+                          data-time="{{ date('h:i A', strtotime($appointment->time)) }}"
+                          data-status="{{ $appointment->status }}"
+                      >
+                          View
+                      </button>
+                  </td>
+              </tr>
+              @endforeach
+          </tbody>
       </table>
-    </div>
+  </div>
+
+<!-- Modal -->
+<div id="appointmentModal" class="modal-overlay" style="display: none;">
+  <div class="modal-card">
+      <span id="closeModal" class="close-modal">&times;</span>
+      <div class="modal-header">
+          <h2>Appointment Details</h2>
+      </div>
+      <div id="modal-details" class="modal-body">
+          <!-- Dynamic Details -->
+      </div>
+      <div class="modal-footer">
+          <button id="printDetailsBtn" class="modal-button print-btn">Print</button>
+          <button id="cancelModalBtn" class="modal-button cancel-btn">Close</button>
+      </div>
+  </div>
+</div>
+
+  
+
+
   </div>
 
   <!-- Modal for Receipt -->
@@ -176,8 +340,76 @@
   </div>
 </div>
 
+
+
+
 <!-- Include jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const viewButtons = document.querySelectorAll('.view-button');
+      const modal = document.getElementById('appointmentModal');
+      const modalDetails = document.getElementById('modal-details');
+      const closeModal = document.getElementById('closeModal');
+      const cancelModalBtn = document.getElementById('cancelModalBtn');
+      const printDetailsBtn = document.getElementById('printDetailsBtn');
+
+      // Open Modal and Populate Data
+      viewButtons.forEach(button => {
+          button.addEventListener('click', function () {
+              const name = button.getAttribute('data-name');
+              const phone = button.getAttribute('data-phone');
+              const address = button.getAttribute('data-address');
+              const service = button.getAttribute('data-service');
+              const amount = button.getAttribute('data-amount');
+              const date = button.getAttribute('data-date');
+              const time = button.getAttribute('data-time');
+              const status = button.getAttribute('data-status');
+
+              const detailsHTML = `
+                  <p><strong>Name:</strong> ${name}</p>
+                  <p><strong>Phone:</strong> ${phone}</p>
+                  <p><strong>Address:</strong> ${address}</p>
+                  <p><strong>Service:</strong> ${service}</p>
+                  <p><strong>Amount:</strong> ${amount}</p>
+                  <p><strong>Date:</strong> ${date}</p>
+                  <p><strong>Time:</strong> ${time}</p>
+                  <p><strong>Status:</strong> ${status}</p>
+              `;
+
+              modalDetails.innerHTML = detailsHTML;
+              modal.style.display = 'flex';
+          });
+      });
+
+      // Close Modal
+      closeModal.addEventListener('click', () => modal.style.display = 'none');
+      cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+      // Print Details
+      printDetailsBtn.addEventListener('click', function () {
+          const printContent = modalDetails.innerHTML;
+          const originalContent = document.body.innerHTML;
+
+          document.body.innerHTML = `
+              <div style="text-align: center; font-family: Arial, sans-serif;">
+                  <h2>Dental Clinic Appointment</h2>
+                  <div style="text-align: left; margin-left: 20px;">${printContent}</div>
+              </div>
+          `;
+          window.print();
+          document.body.innerHTML = originalContent;
+          window.location.reload();
+      });
+
+      // Close Modal on Outside Click
+      window.addEventListener('click', function (e) {
+          if (e.target === modal) modal.style.display = 'none';
+      });
+  });
+</script>
 
 <script>
   const printPdfButton = document.getElementById('printPdfButton');
@@ -199,6 +431,8 @@
     pdf.save('receipt.pdf');
   });
 </script>
+
+
 <script>
   function removeRow(button, id) {
     if (confirm('Are you sure you want to cancel this booking?')) {

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Appointment;
+use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
-    public function index() {
-        // Fetch the appointments from the database
-        $appointments = Appointment::all();
-        
-        // Calculate total revenue by ensuring 'amount' is treated as a numeric value
-        $totalRevenue = $appointments->sum(function($appointment) {
-            return (float) $appointment->amount; // Convert 'amount' to float before summing
-        });
-        
-        // Pass the appointments data and total revenue to the view
-        return view('history', ['appointments' => $appointments, 'totalRevenue' => $totalRevenue]);
+    public function index(){
+        return view('history');
     }
-    
+
+    public function filter(Request $request)
+    {
+        $status = $request->query('status');
+
+        // Fetch data based on status, or all if 'all' is selected
+        $appointments = ($status && $status !== 'all')
+            ? Appointment::where('status', $status)->get()
+            : Appointment::all();
+
+        return response()->json($appointments);
+    }
 }
-
-

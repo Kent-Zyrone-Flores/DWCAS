@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/store-report', [ReportsController::class, 'storeReport'])->name('store_report');
     Route::post('/store-report', [ReportsController::class, 'storeReport']);
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
+    Route::get('/history/filter', [HistoryController::class, 'filter'])->name('history.filter');
 });
 
 Route::delete('/appointments/{id}', [AppointmentController::class, 'delete'])->name('appointments.delete');
@@ -58,4 +59,4 @@ Route::get('/booked-slots', [AppointmentController::class, 'bookedSlots'])->name
 Route::post('/appointments/reschedule/{id}', [AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 Route::post('/appointments/reschedule', [AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 Route::post('appointments/{id}/delete', [AppointmentController::class, 'delete'])->name('appointments.delete');
-
+Route::post('/appointments/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
