@@ -169,6 +169,7 @@
     <select class="status-dropdown" data-id="{{ $appointment->id }}">
         <option value="Cancelled" {{ $appointment->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
         <option value="Confirmed" {{ $appointment->status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+        <option value="Reschedule" {{ $appointment->status == 'Reschedule' ? 'selected' : '' }}>Reschedule</option>
         <option value="No show" {{ $appointment->status == 'No show' ? 'selected' : '' }}>No Show</option>
     </select>
 
@@ -228,7 +229,7 @@
 </div>
  </center>
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // Reschedule Modal Elements
     const rescheduleModal = document.getElementById('rescheduleModal');
     const closeModalButton = document.getElementById('closeRescheduleModal');
@@ -246,7 +247,7 @@
             // Set form data
             document.getElementById('appointmentId').value = appointmentId;
             document.getElementById('rescheduleName').value = name;
-            document.getElementById('rescheduleDate').value = date;
+            document.getElementById('date').value = date;  // Fix the field name here
             document.getElementById('rescheduleTime').value = time;
 
             // Open the modal
@@ -291,6 +292,7 @@
         });
     });
 });
+
 
 </script>
 <script>
@@ -376,6 +378,3 @@
         }
     }
 </script>
-
-
-

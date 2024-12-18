@@ -231,7 +231,7 @@
                             <td>{{ $appointment->status }}</td>
                             <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
                             <td class="hide-amount">{{ $appointment->amount }}</td>
-                            <td>
+                            <td>{{ $appointment->transaction }}</td>
                             </td>
                         </tr>
                     @endforeach

@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/history/filter', [HistoryController::class, 'filter'])->name('history.filter');
 });
 
+Route::post('/appointments/{id}/upload', [AppointmentController::class, 'upload'])->name('appointments.upload');
+Route::post('/upload-image', [AppointmentController::class, 'upload'])->name('image.upload');
+Route::post('/upload-proof', [AppointmentController::class, 'uploadProof'])->name('upload.proof');
 Route::delete('/appointments/{id}', [AppointmentController::class, 'delete'])->name('appointments.delete');
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
 Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
