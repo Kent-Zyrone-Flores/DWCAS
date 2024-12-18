@@ -30,6 +30,6 @@ class SignupController extends Controller {
         User::create($incoming_fields);
 
         // Redirect to login with success message
-        return redirect()->route('signup')->with('success', 'Account created successfully. Please log in.');
+        return redirect()->route('user')->with('success', 'Account created successfully. Please log in.');
     }
 }

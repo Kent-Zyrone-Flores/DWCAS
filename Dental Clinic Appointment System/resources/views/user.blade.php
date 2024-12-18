@@ -5,138 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dental World Clinic</title>
   <link rel="stylesheet" href="css/user.css">
-  <style>
-    /* Modal Overlay */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    /* Modal Card */
-    .modal-card {
-        background: #ffffff;
-        width: 450px;
-        border-radius: 10px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-        padding: 20px;
-        text-align: center;
-        animation: slideIn 0.4s ease-in-out;
-    }
-
-    .modal-header h2 {
-        font-family: Arial, sans-serif;
-        margin-bottom: 10px;
-    }
-
-    .modal-body p {
-        text-align: left;
-        font-size: 16px;
-        margin: 5px 0;
-    }
-
-    /* Buttons */
-    .modal-button {
-        padding: 8px 15px;
-        margin: 5px;
-        font-size: 14px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .print-btn {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .print-btn:hover {
-        background-color: #0056b3;
-    }
-
-    .cancel-btn {
-        background-color: #dc3545;
-        color: #fff;
-    }
-
-    .cancel-btn:hover {
-        background-color: #c82333;
-    }
-
-    /* Close Modal Button */
-    .close-modal {
-        float: right;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #aaa;
-        transition: color 0.3s;
-    }
-
-    .close-modal:hover {
-        color: #000;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-        from { transform: translateY(-30px); }
-        to { transform: translateY(0); }
-    }
-</style>
-
-  <style>
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      width: 400px;
-      text-align: center;
-      position: relative;
-    }
-    .modal-content h3 {
-      margin-top: 0;
-    }
-    .modal-content button {
-      margin-top: 15px;
-    }
-    .close-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-  </style>
+  
 </head>
 <body>
   <nav class="navbaruser">
@@ -168,13 +37,11 @@
         {{ session('success') }}
     </div>
 @endif
-
 @if (session('error'))
     <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 10px; border: 1px solid #f5c6cb;">
         {{ session('error') }}
     </div>
 @endif
-
   <div class="main-container">
     <div class="form-container">
       <h2>Book Appointment</h2>
@@ -189,7 +56,6 @@
                       placeholder="Full Name" 
                       required
                   >
-  
                   <label for="phone">Contact No.</label>
                   <input 
                       type="tel" 
@@ -199,7 +65,6 @@
                       placeholder="Contact Number" 
                       required
                   >
-  
                   <label for="address">Address</label>
                   <input 
                       type="text" 
@@ -209,7 +74,6 @@
                       placeholder="Address" 
                       required
                   >
-
         <label for="service">Service</label>
         <select id="service" name="service" required>
           <option value="General Dentistry" data-price="₱1000">General Dentistry</option>
@@ -224,6 +88,7 @@
 
         <label for="date">Date</label>
         <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
+<<<<<<< HEAD
         
         <label for="time">Time</label>
 <select id="time" name="time" required>
@@ -248,6 +113,37 @@
        
           
 
+=======
+{{-- 
+    <script>
+        // Set today's date as the minimum selectable date
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+
+            // Format the date as YYYY-MM-DD
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const minDate = `${year}-${month}-${day}`;
+            dateInput.setAttribute('min', minDate);
+        });
+    </script> --}}
+        <label for="time">Time</label>
+        <select type="text" id="time" name="time" required>
+          <option value="8:00">8:00 AM</option>
+          <option value="9:00">9:00 AM</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="12:00">12:00 PM</option>
+          <option value="13:00">1:00 PM</option>
+          <option value="14:00">2:00 PM</option>
+          <option value="15:00">3:00 PM</option>
+          <option value="16:00">4:00 PM</option>
+          <option value="17:00">5:00 PM</option>
+        </select>
+>>>>>>> 8f60bd30d2d4c922974b353c24b1796b18b130a9
         <center>
         <button type="button" id="bookButton">Book</button>
         </center>
@@ -325,11 +221,7 @@
   </div>
 </div>
 
-  
-
-
   </div>
-
   <!-- Modal for Receipt -->
   <div id="receiptModal" class="modal">
   <div class="modal-content">
@@ -340,12 +232,15 @@
     <br>
     <button id="printPdfButton" style="margin-top: 15px;">Print PDF</button>
     <button id="dismissModal" style="margin-top: 15px;">Close</button>
+    <br>
+    <form action="{{ route('appointments.upload', $appointment->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <label for="proof">Upload Proof:</label>
+    <input type="file" name="proof" required>
+    <button type="submit">Upload</button>
+</form>
   </div>
-</div>
-
-
-
-
+</div> 
 <!-- Include jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
@@ -388,67 +283,104 @@
 
   
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const viewButtons = document.querySelectorAll('.view-button modal-button');
-      const modal = document.getElementById('appointmentModal');
-      const modalDetails = document.getElementById('modal-details');
-      const closeModal = document.getElementById('closeModal');
-      const cancelModalBtn = document.getElementById('cancelModalBtn');
-      const printDetailsBtn = document.getElementById('printDetailsBtn');
+    document.addEventListener('DOMContentLoaded', function () {
+    const viewButtons = document.querySelectorAll('.view-button.modal-button'); 
+    viewButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        const name = button.getAttribute('data-name');
+        const phone = button.getAttribute('data-phone');
+        const address = button.getAttribute('data-address');
+        const service = button.getAttribute('data-service');
+        const amount = button.getAttribute('data-amount');
+        const date = button.getAttribute('data-date');
+        const time = button.getAttribute('data-time');
+        const status = button.getAttribute('data-status');
+        
 
-      // Open Modal and Populate Data
-      viewButtons.forEach(button => {
-          button.addEventListener('click', function () {
-              const name = button.getAttribute('data-name');
-              const phone = button.getAttribute('data-phone');
-              const address = button.getAttribute('data-address');
-              const service = button.getAttribute('data-service');
-              const amount = button.getAttribute('data-amount');
-              const date = button.getAttribute('data-date');
-              const time = button.getAttribute('data-time');
-              const status = button.getAttribute('data-status');
+        const detailsHTML = `
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Address:</strong> ${address}</p>
+            <p><strong>Service:</strong> ${service}</p>
+            <p><strong>Amount:</strong> ${amount}</p>
+            <p><strong>Date:</strong> ${date}</p>
+            <p><strong>Time:</strong> ${time}</p>
+            <p><strong>Status:</strong> ${status}</p>
+        `;
 
-              const detailsHTML = `
-                  <p><strong>Name:</strong> ${name}</p>
-                  <p><strong>Phone:</strong> ${phone}</p>
-                  <p><strong>Address:</strong> ${address}</p>
-                  <p><strong>Service:</strong> ${service}</p>
-                  <p><strong>Amount:</strong> ${amount}</p>
-                  <p><strong>Date:</strong> ${date}</p>
-                  <p><strong>Time:</strong> ${time}</p>
-                  <p><strong>Status:</strong> ${status}</p>
-              `;
+        document.getElementById('modal-details').innerHTML = detailsHTML;
+        document.getElementById('appointmentModal').style.display = 'flex';
+    });
+});
+    const modal = document.getElementById('appointmentModal');
+    const modalDetails = document.getElementById('modal-details');
+    const closeModal = document.getElementById('closeModal');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const printDetailsBtn = document.getElementById('printDetailsBtn');
+    const proofOfTransactionInput = document.getElementById('proof-of-transaction');
+    const submitProofBtn = document.getElementById('submitProofBtn');
+    const receiptModal = document.getElementById('receiptModal');
 
-              modalDetails.innerHTML = detailsHTML;
-              modal.style.display = 'flex';
-          });
-      });
+    submitProofBtn.addEventListener('click', function () {
+    const file = proofOfTransactionInput.files[0];
 
-      // Close Modal
-      closeModal.addEventListener('click', () => modal.style.display = 'none');
-      cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
+    if (!file) {
+      alert('Please upload a proof of transaction.');
+      return;
+    }
 
-      // Print Details
-      printDetailsBtn.addEventListener('click', function () {
-          const printContent = modalDetails.innerHTML;
-          const originalContent = document.body.innerHTML;
-
-          document.body.innerHTML = `
-              <div style="text-align: center; font-family: Arial, sans-serif;">
-                  <h2>Dental Clinic Appointment</h2>
-                  <div style="text-align: left; margin-left: 20px;">${printContent}</div>
-              </div>
-          `;
-          window.print();
-          document.body.innerHTML = originalContent;
-          window.location.reload();
-      });
-
-      // Close Modal on Outside Click
-      window.addEventListener('click', function (e) {
-          if (e.target === modal) modal.style.display = 'none';
-      });
+    const formData = new FormData();
+    formData.append('proof-of-transaction', file);
+    
+    fetch('/upload-proof', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Proof of transaction submitted successfully.');
+        receiptModal.style.display = 'none'; // Close modal after successful submission
+      } else {
+        alert('Failed to submit proof. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    });
   });
+
+
+    // Close Modal
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    // Print Details
+    printDetailsBtn.addEventListener('click', function () {
+        const printContent = modalDetails.innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = `
+            <div style="text-align: center; font-family: Arial, sans-serif;">
+                <h2>Dental Clinic Appointment</h2>
+                <div style="text-align: left; margin-left: 20px;">${printContent}</div>
+            </div>
+        `;
+        window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload();
+    });
+
+    // Close Modal on Outside Click
+    window.addEventListener('click', function (e) {
+        if (e.target === modal) modal.style.display = 'none';
+    });
+});
+
 </script>
 
 <script>
@@ -561,6 +493,11 @@
     const closeModalButton = document.getElementById('closeModal');
     const dismissModalButton = document.getElementById('dismissModal');
     const qrCodeCanvas = document.getElementById('qrCodeCanvas'); // QR Code canvas
+    const bookedDates = [];
+document.querySelectorAll('#bookingTable tbody tr').forEach(row => {
+  const bookingDate = row.cells[5].innerText.trim(); // Assuming the 6th column (Date) contains the appointment date
+  bookedDates.push(bookingDate);
+});
 
     // Update amount based on selected service
     serviceSelect.addEventListener('change', function () {
@@ -570,91 +507,92 @@
     });
 
     // Show modal with receipt details after booking
-    bookButton.addEventListener('click', function () {
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const address = document.getElementById('address').value;
-      const service = serviceSelect.options[serviceSelect.selectedIndex].text;
-      const amount = amountInput.value;
-      const date = document.getElementById('date').value;
-      const time = document.getElementById('time').value;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); 
-      const selectedDate = new Date(document.getElementById('date').value);
-      const selectedTime = document.getElementById('time').value;
-      const currentTime = today.getHours() * 100 + today.getMinutes(); // Convert current time to HHMM format
-      const timeMap = {
-        '12:00 PM': 1200,
-        '1:00 PM': 1300,
-        '8:00 AM': 800,
-        '6:00 PM': 1800,
-        '3:00 PM': 1500
-    };
-    const selectedTimeFormatted = timeMap[selectedTime];
-     // Check if the selected date is in the past
-     if (selectedDate < today) {
-        alert('You cannot book an appointment for a past date.');
-        return;
-    }
-
-    // Check if the selected time is in the past (for today's date)
-    if (selectedDate.toDateString() === today.toDateString() && selectedTimeFormatted < currentTime) {
-        alert('You cannot book an appointment for a past time.');
-        return;
-    }
-      if (name && phone && address && service && amount && date && time) {
-        receiptDetails.innerHTML = `
-          <strong>Name:</strong> ${name}<br>
-          <strong>Phone:</strong> ${phone}<br>
-          <strong>Address:</strong> ${address}<br>
-          <strong>Service:</strong> ${service}<br>
-          <strong>Amount:</strong> ${amount}<br>
-          <strong>Date:</strong> ${date}<br>
-          <strong>Time:</strong> ${time}<br>
-        `;
-
-        // Generate QR Code
-        QRCode.toCanvas(qrCodeCanvas, `Name: ${name}\nPhone: ${phone}\nService: ${service}\nAmount: ${amount}\nDate: ${date}\nTime: ${time}`, {
-          width: 200,
-          margin: 2,
-        }, function (error) {
-          if (error) console.error(error);
-          console.log('QR Code generated!');
-        });
-
-        // Show the modal
-        receiptModal.style.display = 'flex';
-
-        // Save booking data when modal opens
-        fetch("{{ route('user.submit') }}", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-          },
-          body: JSON.stringify({
-            name,
-            phone,
-            address,
-            service,
-            amount,
-            date,
-            time
-          })
-        }).then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        }).then(data => {
-          console.log('Booking saved:', data);
-        }).catch(error => {
-          console.error('Error saving booking:', error);
-        });
-      } else {
-        alert('Please fill out all fields before booking.');
+      bookButton.addEventListener('click', function () {
+        
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const service = serviceSelect.options[serviceSelect.selectedIndex].text;
+        const amount = amountInput.value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        const selectedDate = new Date(document.getElementById('date').value);
+        const selectedTime = document.getElementById('time').value;
+        const currentTime = today.getHours() * 100 + today.getMinutes(); // Convert current time to HHMM format
+        const timeMap = {
+          '12:00 PM': 1200,
+          '1:00 PM': 1300,
+          '8:00 AM': 800,
+          '6:00 PM': 1800,
+          '3:00 PM': 1500
+      };
+      const selectedTimeFormatted = timeMap[selectedTime];
+      // Check if the selected date is in the past
+      if (selectedDate < today) {
+          alert('You cannot book an appointment for a past date.');
+          return;
       }
-    });
+
+      // Check if the selected time is in the past (for today's date)
+      if (selectedDate.toDateString() === today.toDateString() && selectedTimeFormatted < currentTime) {
+          alert('You cannot book an appointment for a past time.');
+          return;
+      }
+        if (name && phone && address && service && amount && date && time) {
+          receiptDetails.innerHTML = `
+            <strong>Name:</strong> ${name}<br>
+            <strong>Phone:</strong> ${phone}<br>
+            <strong>Address:</strong> ${address}<br>
+            <strong>Service:</strong> ${service}<br>
+            <strong>Amount:</strong> ${amount}<br>
+            <strong>Date:</strong> ${date}<br>
+            <strong>Time:</strong> ${time}<br>
+          `;
+
+          // Generate QR Code
+          QRCode.toCanvas(qrCodeCanvas, `Name: ${name}\nPhone: ${phone}\nService: ${service}\nAmount: ${amount}\nDate: ${date}\nTime: ${time}`, {
+            width: 200,
+            margin: 2,
+          }, function (error) {
+            if (error) console.error(error);
+            console.log('QR Code generated!');
+          });
+
+          // Show the modal
+          receiptModal.style.display = 'flex';
+
+          // Save booking data when modal opens
+          fetch("{{ route('user.submit') }}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: JSON.stringify({
+              name,
+              phone,
+              address,
+              service,
+              amount,
+              date,
+              time
+            })
+          }).then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          }).then(data => {
+            console.log('Booking saved:', data);
+          }).catch(error => {
+            console.error('Error saving booking:', error);
+          });
+        } else {
+          alert('Please fill out all fields before booking.');
+        }
+      });
 
     // Close modal with close button
     closeModalButton.addEventListener('click', function () {

@@ -95,36 +95,18 @@ class AppointmentController extends Controller
     }
 
     public function reschedule(Request $request)
-    {
-        $request->validate([
-            'appointmentId' => 'required|exists:appointments,id',
-            'date' => 'required|date',
-            'time' => 'required|string',
-        ]);
-
-        $appointment = Appointment::find($request->appointmentId);
-
-        if (!$appointment) {
-            return response()->json(['success' => false, 'message' => 'Appointment not found']);
-        }
-
-        // Check if the new slot is available
-        $isSlotTaken = Appointment::where('date', $request->date)
-                                   ->where('time', $request->time)
-                                   ->exists();
-
-        if ($isSlotTaken) {
-            return response()->json(['success' => false, 'message' => 'The selected time slot is already booked.']);
-        }
-
-        // Update appointment details
+{
+    $appointment = Appointment::find($request->appointmentId);
+    if ($appointment) {
         $appointment->date = $request->date;
         $appointment->time = $request->time;
-        $appointment->status = 'Rescheduled';
         $appointment->save();
 
-        return response()->json(['success' => true, 'message' => 'Appointment rescheduled successfully!']);
+        return response()->json(['success' => true, 'message' => 'Appointment rescheduled successfully.']);
     }
+
+    return response()->json(['success' => false, 'message' => 'Appointment not found.']);
+}
 
     public function destroy($id)
     {
@@ -137,6 +119,7 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
+<<<<<<< HEAD
 
     public function showAppointmentForm(Request $request)
     {
@@ -180,3 +163,22 @@ class AppointmentController extends Controller
     
 
 }
+=======
+    public function upload(Request $request)
+{
+    // Validate the uploaded file
+    $request->validate([
+        'proof-of-transaction' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    ]);
+
+    // Store the file in the 'proofs' directory
+    $filePath = $request->file('proof-of-transaction')->store('proofs');
+
+    // Optionally save the file path in the database
+    // Example: Appointment::where('id', $appointmentId)->update(['proof_of_transaction' => $filePath]);
+
+    return response()->json(['success' => true, 'filePath' => $filePath]);
+}
+
+}
+>>>>>>> 8f60bd30d2d4c922974b353c24b1796b18b130a9
