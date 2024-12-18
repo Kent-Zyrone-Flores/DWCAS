@@ -317,7 +317,6 @@
           </tbody>
       </table>
   </div>
-
 <!-- Modal -->
 <div id="appointmentModal" class="modal-overlay" style="display: none;">
   <div class="modal-card">

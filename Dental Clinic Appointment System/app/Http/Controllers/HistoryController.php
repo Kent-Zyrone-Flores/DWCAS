@@ -7,17 +7,19 @@ use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
-    public function index()
+    public function index(){
+        return view('history');
+    }
+
+    public function filter(Request $request)
     {
-        $appointments = Appointment::all();
+        $status = $request->query('status');
 
-        $totalRevenue = $appointments->sum(function ($appointment) {
-            return (float) $appointment->amount; 
-        });
+        // Fetch data based on status, or all if 'all' is selected
+        $appointments = ($status && $status !== 'all')
+            ? Appointment::where('status', $status)->get()
+            : Appointment::all();
 
-        return view('history', [
-            'appointments' => $appointments,
-            'totalRevenue' => $totalRevenue
-        ]);
+        return response()->json($appointments);
     }
 }

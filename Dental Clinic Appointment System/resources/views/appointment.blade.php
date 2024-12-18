@@ -98,15 +98,15 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Profile Section -->
         <div class="profile-section">
             <img src="https://via.placeholder.com/80?text=Photo" alt="Profile Photo" class="profile-photo">
             <div class="name">Admin Name</div>
             <div class="email"> @if (Auth::check())
-                <p>Hello, {{ Auth::user()->email }}</p>
+                <p>{{ Auth::user()->email }}</p>
             @else
                 <p>Welcome, Guest!</p>
             @endif</div>
+
         </div><hr>
 
         <!-- Navigation Links -->
