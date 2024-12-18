@@ -14,6 +14,7 @@ class Appointment extends Model
         'phone',
         'address',
         'service',
+        'subservice',
         'amount',
         'date',
         'time',

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('address');
             $table->string('service');
+            $table->string('subservice');
             $table->string('amount');
             $table->date('date');
             $table->string('time');
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+    
 
     public function down()
     {

@@ -37,11 +37,13 @@
         {{ session('success') }}
     </div>
 @endif
+
 @if (session('error'))
     <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 10px; border: 1px solid #f5c6cb;">
         {{ session('error') }}
     </div>
 @endif
+
   <div class="main-container">
     <div class="form-container">
       <h2>Book Appointment</h2>
@@ -56,6 +58,7 @@
                       placeholder="Full Name" 
                       required
                   >
+  
                   <label for="phone">Contact No.</label>
                   <input 
                       type="tel" 
@@ -65,6 +68,7 @@
                       placeholder="Contact Number" 
                       required
                   >
+  
                   <label for="address">Address</label>
                   <input 
                       type="text" 
@@ -74,46 +78,157 @@
                       placeholder="Address" 
                       required
                   >
-        <label for="service">Service</label>
-        <select id="service" name="service" required>
-          <option value="General Dentistry" data-price="₱1000">General Dentistry</option>
-          <option value="Orthodontics" data-price="₱1500">Orthodontics</option>
-          <option value="Cosmetic Dentistry" data-price="₱2000">Cosmetic Dentistry</option>
-          <option value="Pediatric Dentistry" data-price="₱2500">Pediatric Dentistry</option>
-          <option value="Specialized Procedures" data-price="₱3000">Specialized Procedures</option>
-        </select>
+
+                  <label for="service">Category</label>
+<select id="service" name="service" required>
+  <option value="">Select Service</option>
+  <option value="General Dentistry">General Dentistry</option>
+  <option value="Orthodontics">Orthodontics</option>
+  <option value="Cosmetic Dentistry">Cosmetic Dentistry</option>
+  <option value="Pediatric Dentistry">Pediatric Dentistry</option>
+  <option value="Specialized Procedures">Specialized Procedures</option>
+</select>
+
+<br>
+
+<label for="subservice">Sub Category</label>
+<select id="subservice" name="subservice" required>
+  <option value="">Select Subcategory</option>
+</select>
+
+<script>
+// Define categories, subcategories, and prices
+const serviceData = {
+  "General Dentistry": [
+    { subservice: "Dental Cleaning", price: "₱1,500" },
+    { subservice: "Tooth Extraction", price: "₱2,000" },
+    { subservice: "Filling (Per Tooth)", price: "₱1,200" },
+  ],
+  "Orthodontics": [
+    { subservice: "Braces Installation", price: "₱60,000" },
+    { subservice: "Retainer (Upper or Lower)", price: "₱8,000" },
+    { subservice: "Adjustment (Per Visit)", price: "₱1,500" },
+  ],
+  "Cosmetic Dentistry": [
+    { subservice: "Teeth Whitening", price: "₱5,000" },
+    { subservice: "Veneers (Per Tooth)", price: "₱15,000" },
+    { subservice: "Bonding (Per Tooth)", price: "₱3,000" },
+  ],
+  "Pediatric Dentistry": [
+    { subservice: "Baby Tooth Extraction", price: "₱1,000" },
+    { subservice: "Fluoride Treatment", price: "₱800" },
+    { subservice: "Sealants (Per Tooth)", price: "₱1,200" },
+  ],
+  "Specialized Procedures": [
+    { subservice: "Root Canal Treatment", price: "₱8,000" },
+    { subservice: "Dental Implants", price: "₱100,000" },
+    { subservice: "TMJ Treatment", price: "₱25,000" },
+  ],
+};
+
+// Function to populate subcategory based on category selected
+function updateSubcategory() {
+  const categorySelect = document.getElementById("service");
+  const subcategorySelect = document.getElementById("subservice");
+
+  // Clear existing subcategories
+  subcategorySelect.innerHTML = '<option value="">Select Sub Service</option>';
+
+  const selectedCategory = categorySelect.value;
+
+  if (serviceData[selectedCategory]) {
+    serviceData[selectedCategory].forEach(service => {
+      const option = document.createElement("option");
+      option.value = service.subservice;
+      option.textContent = service.subservice;
+      option.dataset.price = service.price;
+      subcategorySelect.appendChild(option);
+    });
+  }
+}
+
+// Event listener for category dropdown
+document.getElementById("service").addEventListener("change", updateSubcategory);
+
+// Update amount based on subcategory selection
+document.getElementById("subservice").addEventListener("change", function () {
+  const selectedOption = this.options[this.selectedIndex];
+  document.getElementById("amount").value = selectedOption.dataset.price || "";
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+      const viewButtons = document.querySelectorAll('.view-button modal-button');
+      const modal = document.getElementById('appointmentModal');
+      const modalDetails = document.getElementById('modal-details');
+      const closeModal = document.getElementById('closeModal');
+      const cancelModalBtn = document.getElementById('cancelModalBtn');
+      const printDetailsBtn = document.getElementById('printDetailsBtn');
+
+      // Open Modal and Populate Data
+      viewButtons.forEach(button => {
+          button.addEventListener('click', function () {
+              const name = button.getAttribute('data-name');
+              const phone = button.getAttribute('data-phone');
+              const address = button.getAttribute('data-address');
+              const service = button.getAttribute('data-service');
+              const amount = button.getAttribute('data-amount');
+              const date = button.getAttribute('data-date');
+              const time = button.getAttribute('data-time');
+              const status = button.getAttribute('data-status');
+
+              const detailsHTML = `
+                  <p><strong>Name:</strong> ${name}</p>
+                  <p><strong>Phone:</strong> ${phone}</p>
+                  <p><strong>Address:</strong> ${address}</p>
+                  <p><strong>Service:</strong> ${service}</p>
+                  <p><strong>Amount:</strong> ${amount}</p>
+                  <p><strong>Date:</strong> ${date}</p>
+                  <p><strong>Time:</strong> ${time}</p>
+                  <p><strong>Status:</strong> ${status}</p>
+              `;
+
+              modalDetails.innerHTML = detailsHTML;
+              modal.style.display = 'flex';
+          });
+      });
+
+      // Close Modal
+      closeModal.addEventListener('click', () => modal.style.display = 'none');
+      cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+      // Print Details
+      printDetailsBtn.addEventListener('click', function () {
+          const printContent = modalDetails.innerHTML;
+          const originalContent = document.body.innerHTML;
+
+          document.body.innerHTML = `
+              <div style="text-align: center; font-family: Arial, sans-serif;">
+                  <h2>Dental Clinic Appointment</h2>
+                  <div style="text-align: left; margin-left: 20px;">${printContent}</div>
+              </div>
+          `;
+          window.print();
+          document.body.innerHTML = originalContent;
+          window.location.reload();
+      });
+
+      // Close Modal on Outside Click
+      window.addEventListener('click', function (e) {
+          if (e.target === modal) modal.style.display = 'none';
+      });
+  });
+
+
+  
+</script>
+
 
         <label for="amount">Amount</label>
         <input type="text" id="amount" name="amount" placeholder="Amount" readonly required>
 
         <label for="date">Date</label>
         <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
-<<<<<<< HEAD
         
-        <label for="time">Time</label>
-<select id="time" name="time" required>
-    <option value="8:00">8:00 AM</option>
-    <option value="9:00">9:00 AM</option>
-    <option value="10:00">10:00 AM</option>
-    <option value="11:00">11:00 AM</option>
-    <option value="12:00">12:00 PM</option>
-    <option value="13:00">1:00 PM</option>
-    <option value="14:00">2:00 PM</option>
-    <option value="15:00">3:00 PM</option>
-    <option value="16:00">4:00 PM</option>
-    <option value="17:00">5:00 PM</option>
-</select>
-
-<!-- Error message for the 'time' field -->
-@if($errors->has('time'))
-    <p style="color: red;">{{ $errors->first('time') }}</p>
-@endif
-
-        
-       
-          
-
-=======
 {{-- 
     <script>
         // Set today's date as the minimum selectable date
@@ -130,6 +245,8 @@
             dateInput.setAttribute('min', minDate);
         });
     </script> --}}
+
+
         <label for="time">Time</label>
         <select type="text" id="time" name="time" required>
           <option value="8:00">8:00 AM</option>
@@ -143,9 +260,9 @@
           <option value="16:00">4:00 PM</option>
           <option value="17:00">5:00 PM</option>
         </select>
->>>>>>> 8f60bd30d2d4c922974b353c24b1796b18b130a9
+
         <center>
-        <button type="button" id="bookButton">Book</button>
+        <button type="submit" id="bookButton">Book</button>
         </center>
       </form>
     </div>
@@ -160,6 +277,7 @@
                   <th>Phone Number</th>
                   <th>Address</th>
                   <th>Service</th>
+                  <th>Sub Service</th>
                   <th>Amount</th>
                   <th>Date</th>
                   <th>Time</th>
@@ -174,6 +292,7 @@
                   <td>{{ $appointment->phone }}</td>
                   <td>{{ $appointment->address }}</td>
                   <td>{{ $appointment->service }}</td>
+                  <td>{{ $appointment->subservice }}</td>
                   <td>{{ $appointment->amount }}</td>
                   <td>{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}</td>
                   <td>{{ date('h:i A', strtotime($appointment->time)) }}</td>
@@ -198,12 +317,100 @@
                       >
                           View
                       </button>
+                      <button class="printReceiptButton">Print Receipt</button>
+
                   </td>
               </tr>
               @endforeach
           </tbody>
       </table>
   </div>
+<!-- Include jsPDF and QRCode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script>
+  // Function to generate and print PDF for a specific booking
+  function generatePDF(row) {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    // Extract data from the row
+    const name = row.cells[0].innerText;
+    const phone = row.cells[1].innerText;
+    const service = row.cells[3].innerText;
+    const subservice = row.cells[4].innerText;
+    const date = row.cells[6].innerText;
+    const amount = row.cells[5].innerText;
+
+    // Clinic Details
+    const clinicName = "Dental World Clinic";
+    const clinicAddress = "Poblacion, Tagoloan Misamis Oriental, 9001";
+    const clinicContact = "Contact: 0917-885-5153";
+
+    // Logo URL (ensure the image path is publicly accessible)
+    const logoUrl = "Documentation/logo.png"; 
+    pdf.addImage(logoUrl, 'PNG', 10, 10, 30, 30);
+
+    pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(clinicName, 45, 20);
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(clinicAddress, 45, 26);
+    pdf.text(clinicContact, 45, 32);
+
+    pdf.setFontSize(14);
+    pdf.text("Booking Successful", 105, 50, null, null, "center");
+
+    // Add appointment details
+    const details = [
+      { label: "Name", value: name },
+      { label: "Phone", value: phone },
+      { label: "Service", value: service },
+      { label: "Sub Service", value: subservice },
+      { label: "Date", value: date },
+      { label: "Amount", value: amount }
+    ];
+
+    let yPos = 60;
+    pdf.setFontSize(12);
+    details.forEach(item => {
+      pdf.setFont("helvetica", "bold");
+      pdf.text(`${item.label}:`, 20, yPos);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`${item.value}`, 60, yPos);
+      yPos += 8;
+    });
+
+    // Generate QR code for the booking (could encode the booking ID or receipt info)
+    const qrCodeData = `Name: ${name}\nService: ${service}\nSub Service: ${subservice}\nDate: ${date}\nAmount: ${amount}`;
+    QRCode.toDataURL(qrCodeData, { width: 100, margin: 2 }, (err, url) => {
+      if (err) {
+        console.error(err);
+      } else {
+        // Add QR Code to PDF
+        pdf.addImage(url, 'PNG', 150, 60, 50, 50);
+        
+        // Save the generated PDF
+        pdf.setFontSize(10);
+        pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 20, null, null, "center");
+        pdf.save(`${name}_booking_receipt.pdf`);
+      }
+    });
+  }
+
+  // Add event listener to all "Print Receipt" buttons in table rows
+  document.querySelectorAll('.printReceiptButton').forEach(button => {
+    button.addEventListener('click', function() {
+      // Get the parent row (tr) of the button clicked
+      const row = this.closest('tr');
+      // Call function to generate and print PDF for that row's data
+      generatePDF(row);
+    });
+  });
+</script>
+
 <!-- Modal -->
 <div id="appointmentModal" class="modal-overlay" style="display: none;">
   <div class="modal-card">
@@ -221,232 +428,78 @@
   </div>
 </div>
 
-  </div>
-  <!-- Modal for Receipt -->
-  <div id="receiptModal" class="modal">
-  <div class="modal-content">
-    <button class="close-button" id="closeModal">&times;</button>
-    <h3>Booking Successful</h3>
-    <p id="receiptDetails"></p>
-    <canvas id="qrCodeCanvas"></canvas>
-    <br>
-    <button id="printPdfButton" style="margin-top: 15px;">Print PDF</button>
-    <button id="dismissModal" style="margin-top: 15px;">Close</button>
-    <br>
-    <form action="{{ route('appointments.upload', $appointment->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <label for="proof">Upload Proof:</label>
-    <input type="file" name="proof" required>
-    <button type="submit">Upload</button>
-</form>
-  </div>
-</div> 
-<!-- Include jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-
-{{-- here the date and time coloring --}}
-<script>
- document.addEventListener('DOMContentLoaded', function () {
-    const dateInput = document.getElementById('date');
-    const timeSelect = document.getElementById('time');
-    
-    dateInput.addEventListener('change', function () {
-        const selectedDate = this.value;
-
-        if (selectedDate) {
-            // Fetch booked slots for the selected date
-            fetch(`/appointments/booked-slots?date=${selectedDate}`)
-                .then(response => response.json())
-                .then(bookedSlots => {
-                    // Reset time options
-                    Array.from(timeSelect.options).forEach(option => {
-                        option.disabled = false; // Enable all options
-                        option.style.color = ''; // Reset text color
-                    });
-
-                    // Disable and color booked slots
-                    bookedSlots.forEach(bookedTime => {
-                        const option = Array.from(timeSelect.options).find(opt => opt.value === bookedTime);
-                        if (option) {
-                            option.disabled = true; // Disable booked option
-                            option.style.color = 'red'; // Mark as red
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching booked slots:', error));
-        }
-    });
-});
-
-</script>
-
-
   
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const viewButtons = document.querySelectorAll('.view-button.modal-button'); 
-    viewButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        const name = button.getAttribute('data-name');
-        const phone = button.getAttribute('data-phone');
-        const address = button.getAttribute('data-address');
-        const service = button.getAttribute('data-service');
-        const amount = button.getAttribute('data-amount');
-        const date = button.getAttribute('data-date');
-        const time = button.getAttribute('data-time');
-        const status = button.getAttribute('data-status');
-        
 
-        const detailsHTML = `
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Address:</strong> ${address}</p>
-            <p><strong>Service:</strong> ${service}</p>
-            <p><strong>Amount:</strong> ${amount}</p>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Time:</strong> ${time}</p>
-            <p><strong>Status:</strong> ${status}</p>
-        `;
 
-        document.getElementById('modal-details').innerHTML = detailsHTML;
-        document.getElementById('appointmentModal').style.display = 'flex';
+  </div>
+
+  <!-- Modal for Receipt -->
+  <div id="receiptModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <button class="close-button" id="closeModal">&times;</button>
+      <h3>Booking Successful</h3>
+      <p id="receiptDetails"></p>
+      <canvas id="qrCodeCanvas"></canvas>
+      <br>
+      <button id="printPdfButton" style="margin-top: 15px;">Print PDF</button>
+      <button id="dismissModal" style="margin-top: 15px;">Close</button>
+    </div>
+  </div>
+
+  <!-- Include jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+  <script>
+    const printPdfButton = document.getElementById('printPdfButton');
+    printPdfButton.addEventListener('click', function () {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+
+      const clinicName = "Dental World Clinic";
+      const clinicAddress = "Poblacion, Tagoloan Misamis Oriental, 9001";
+      const clinicContact = "Contact: 0917-885-5153";
+
+      const logoUrl = "Documentation/logo.png"; // Ensure the path is correct and hosted publicly
+      pdf.addImage(logoUrl, 'PNG', 10, 10, 30, 30);
+
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(clinicName, 45, 20);
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(clinicAddress, 45, 26);
+      pdf.text(clinicContact, 45, 32);
+
+      pdf.setFontSize(14);
+      pdf.text("Appointment Receipt", 105, 50, null, null, "center");
+
+      const details = [
+        { label: "Name", value: document.getElementById('name').value },
+        { label: "Phone", value: document.getElementById('phone').value },
+        { label: "Address", value: document.getElementById('address').value },
+        { label: "Service", value: document.getElementById('service').value },
+        { label: "Amount", value: document.getElementById('amount').value },
+        { label: "Date", value: document.getElementById('date').value },
+        { label: "Time", value: document.getElementById('time').value },
+      ];
+
+      let yPos = 60;
+      pdf.setFontSize(12);
+      details.forEach(item => {
+        pdf.setFont("helvetica", "bold");
+        pdf.text(`${item.label}:`, 20, yPos);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(`${item.value}`, 60, yPos);
+        yPos += 8;
+      });
+
+      pdf.setFontSize(10);
+      pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 10, null, null, "center");
+
+      // Save as PDF
+      pdf.save("appointment_receipt.pdf");
     });
-});
-    const modal = document.getElementById('appointmentModal');
-    const modalDetails = document.getElementById('modal-details');
-    const closeModal = document.getElementById('closeModal');
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
-    const printDetailsBtn = document.getElementById('printDetailsBtn');
-    const proofOfTransactionInput = document.getElementById('proof-of-transaction');
-    const submitProofBtn = document.getElementById('submitProofBtn');
-    const receiptModal = document.getElementById('receiptModal');
-
-    submitProofBtn.addEventListener('click', function () {
-    const file = proofOfTransactionInput.files[0];
-
-    if (!file) {
-      alert('Please upload a proof of transaction.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('proof-of-transaction', file);
-    
-    fetch('/upload-proof', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Proof of transaction submitted successfully.');
-        receiptModal.style.display = 'none'; // Close modal after successful submission
-      } else {
-        alert('Failed to submit proof. Please try again.');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again.');
-    });
-  });
-
-
-    // Close Modal
-    closeModal.addEventListener('click', () => modal.style.display = 'none');
-    cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
-
-    // Print Details
-    printDetailsBtn.addEventListener('click', function () {
-        const printContent = modalDetails.innerHTML;
-        const originalContent = document.body.innerHTML;
-
-        document.body.innerHTML = `
-            <div style="text-align: center; font-family: Arial, sans-serif;">
-                <h2>Dental Clinic Appointment</h2>
-                <div style="text-align: left; margin-left: 20px;">${printContent}</div>
-            </div>
-        `;
-        window.print();
-        document.body.innerHTML = originalContent;
-        window.location.reload();
-    });
-
-    // Close Modal on Outside Click
-    window.addEventListener('click', function (e) {
-        if (e.target === modal) modal.style.display = 'none';
-    });
-});
-
-</script>
-
-<script>
-  const printPdfButton = document.getElementById('printPdfButton');
-
-  printPdfButton.addEventListener('click', function () {
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
-  // Clinic Information
-  const clinicName = "Dental World Clinic";
-  const clinicAddress = "Poblacion, Tagoloan Misamis Oriental, 9001";
-  const clinicContact = "Contact: 0917-885-5153";
-
-  // Add a logo (Optional)
-  const logoUrl = "Documentation/logo.png"; // Ensure the path is correct and hosted publicly
-  pdf.addImage(logoUrl, 'PNG', 10, 10, 30, 30);
-
-  // Title and Clinic Info
-  pdf.setFontSize(18);
-  pdf.setFont("helvetica", "bold");
-  pdf.text(clinicName, 45, 20); // Align next to logo
-  pdf.setFontSize(10);
-  pdf.setFont("helvetica", "normal");
-  pdf.text(clinicAddress, 45, 26);
-  pdf.text(clinicContact, 45, 32);
-
-  // Receipt Title
-  pdf.setFontSize(14);
-  pdf.text("Appointment Receipt", 105, 50, null, null, "center");
-
-  // Receipt Details
-  const details = [
-    { label: "Name", value: document.getElementById('name').value },
-    { label: "Phone", value: document.getElementById('phone').value },
-    { label: "Address", value: document.getElementById('address').value },
-    { label: "Service", value: serviceSelect.options[serviceSelect.selectedIndex].text },
-    { label: "Amount", value: amountInput.value },
-    { label: "Date", value: document.getElementById('date').value },
-    { label: "Time", value: document.getElementById('time').value },
-  ];
-
-  let yPos = 60;
-  pdf.setFontSize(12);
-  details.forEach(item => {
-    pdf.setFont("helvetica", "bold");
-    pdf.text(`${item.label}:`, 20, yPos);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${item.value}`, 60, yPos);
-    yPos += 8;
-  });
-
-  // QR Code
-  const qrCanvas = document.getElementById('qrCodeCanvas');
-  const qrImage = qrCanvas.toDataURL('image/png');
-  pdf.addImage(qrImage, 'PNG', 80, yPos + 10, 50, 50); // Position below details
-
-  // Footer
-  pdf.setFontSize(10);
-  pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 70, null, null, "center");
-
-  // Save PDF
-  pdf.save('receipt.pdf');
-});
-
-</script>
+  </script>
 
 
 <script>
@@ -484,132 +537,7 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   
   <script>
-    const appointmentForm = document.getElementById('appointmentForm');
-    const serviceSelect = document.getElementById('service');
-    const amountInput = document.getElementById('amount');
-    const bookButton = document.getElementById('bookButton');
-    const receiptModal = document.getElementById('receiptModal');
-    const receiptDetails = document.getElementById('receiptDetails');
-    const closeModalButton = document.getElementById('closeModal');
-    const dismissModalButton = document.getElementById('dismissModal');
-    const qrCodeCanvas = document.getElementById('qrCodeCanvas'); // QR Code canvas
-    const bookedDates = [];
-document.querySelectorAll('#bookingTable tbody tr').forEach(row => {
-  const bookingDate = row.cells[5].innerText.trim(); // Assuming the 6th column (Date) contains the appointment date
-  bookedDates.push(bookingDate);
-});
-
-    // Update amount based on selected service
-    serviceSelect.addEventListener('change', function () {
-      const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-      const price = selectedOption.getAttribute('data-price');
-      amountInput.value = price;
-    });
-
-    // Show modal with receipt details after booking
-      bookButton.addEventListener('click', function () {
-        
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-        const address = document.getElementById('address').value;
-        const service = serviceSelect.options[serviceSelect.selectedIndex].text;
-        const amount = amountInput.value;
-        const date = document.getElementById('date').value;
-        const time = document.getElementById('time').value;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); 
-        const selectedDate = new Date(document.getElementById('date').value);
-        const selectedTime = document.getElementById('time').value;
-        const currentTime = today.getHours() * 100 + today.getMinutes(); // Convert current time to HHMM format
-        const timeMap = {
-          '12:00 PM': 1200,
-          '1:00 PM': 1300,
-          '8:00 AM': 800,
-          '6:00 PM': 1800,
-          '3:00 PM': 1500
-      };
-      const selectedTimeFormatted = timeMap[selectedTime];
-      // Check if the selected date is in the past
-      if (selectedDate < today) {
-          alert('You cannot book an appointment for a past date.');
-          return;
-      }
-
-      // Check if the selected time is in the past (for today's date)
-      if (selectedDate.toDateString() === today.toDateString() && selectedTimeFormatted < currentTime) {
-          alert('You cannot book an appointment for a past time.');
-          return;
-      }
-        if (name && phone && address && service && amount && date && time) {
-          receiptDetails.innerHTML = `
-            <strong>Name:</strong> ${name}<br>
-            <strong>Phone:</strong> ${phone}<br>
-            <strong>Address:</strong> ${address}<br>
-            <strong>Service:</strong> ${service}<br>
-            <strong>Amount:</strong> ${amount}<br>
-            <strong>Date:</strong> ${date}<br>
-            <strong>Time:</strong> ${time}<br>
-          `;
-
-          // Generate QR Code
-          QRCode.toCanvas(qrCodeCanvas, `Name: ${name}\nPhone: ${phone}\nService: ${service}\nAmount: ${amount}\nDate: ${date}\nTime: ${time}`, {
-            width: 200,
-            margin: 2,
-          }, function (error) {
-            if (error) console.error(error);
-            console.log('QR Code generated!');
-          });
-
-          // Show the modal
-          receiptModal.style.display = 'flex';
-
-          // Save booking data when modal opens
-          fetch("{{ route('user.submit') }}", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-            },
-            body: JSON.stringify({
-              name,
-              phone,
-              address,
-              service,
-              amount,
-              date,
-              time
-            })
-          }).then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          }).then(data => {
-            console.log('Booking saved:', data);
-          }).catch(error => {
-            console.error('Error saving booking:', error);
-          });
-        } else {
-          alert('Please fill out all fields before booking.');
-        }
-      });
-
-    // Close modal with close button
-    closeModalButton.addEventListener('click', function () {
-      receiptModal.style.display = 'none';
-    });
-
-    dismissModalButton.addEventListener('click', function () {
-      receiptModal.style.display = 'none';
-    });
-
-    // Initialize amount field on page load
-    serviceSelect.dispatchEvent(new Event('change'));
-
-    function removeRow(button) {
-      const row = button.closest('tr');
-      row.remove();
-    }
+   
   </script>
 
 

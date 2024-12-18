@@ -20,6 +20,7 @@ class AppointmentController extends Controller
             'phone' => 'required',
             'address' => 'required',
             'service' => 'required',
+            'subservice' => 'required',
             'amount' => 'required',
             'date' => 'required',
             'time' => 'required',
@@ -52,6 +53,7 @@ class AppointmentController extends Controller
             'phone' => 'required|string',
             'address' => 'required|string',
             'service' => 'required|string',
+            'subservice' => 'required|string',
             'amount' => 'required|string',
             'date' => 'required|date',
             'time' => 'required|string',
@@ -119,7 +121,6 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
-<<<<<<< HEAD
 
     public function showAppointmentForm(Request $request)
     {
@@ -159,11 +160,50 @@ class AppointmentController extends Controller
     return response()->json($bookedSlots);
 }
 
+public function destroy($id)
+        {
+            $appointment = Appointment::find($id);
 
+            if (!$appointment) {
+                return redirect()->route('appointments.index')->with('error', 'Appointment not found.');
+            }
+
+            $appointment->delete();
+            return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
+        }
+        public function submitAppointment(Request $request)
+{
+    // Validate form data
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'phone' => 'required|string',
+        'address' => 'required|string',
+        'service' => 'required|string',
+        'subservice' => 'required|string',
+        'amount' => 'required|numeric',
+        'date' => 'required|date',
+        'time' => 'required|string',
+    ]);
+
+    // Create a new appointment in the database
+    $appointment = new Appointment();
+    $appointment->name = $request->name;
+    $appointment->phone = $request->phone;
+    $appointment->address = $request->address;
+    $appointment->service = $request->service;
+    $appointment->subservice = $request->subservice; // Store selected subservice
+    $appointment->amount = $request->amount;
+    $appointment->date = $request->date;
+    $appointment->time = $request->time;
+    $appointment->status = 'Pending'; // Default status
+    $appointment->save();
+
+    // Redirect back with success message
+    return redirect()->back()->with('success', 'Appointment booked successfully!');
+}
     
 
 }
-=======
     public function upload(Request $request)
 {
     // Validate the uploaded file
@@ -181,4 +221,3 @@ class AppointmentController extends Controller
 }
 
 }
->>>>>>> 8f60bd30d2d4c922974b353c24b1796b18b130a9
