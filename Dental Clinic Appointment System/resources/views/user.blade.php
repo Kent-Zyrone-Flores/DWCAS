@@ -225,37 +225,28 @@
         <label for="date">Date</label>
         <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
         
-{{-- 
-    <script>
-        // Set today's date as the minimum selectable date
-        document.addEventListener('DOMContentLoaded', function () {
-            const dateInput = document.getElementById('date');
-            const today = new Date();
-
-            // Format the date as YYYY-MM-DD
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const minDate = `${year}-${month}-${day}`;
-            dateInput.setAttribute('min', minDate);
-        });
-    </script> --}}
-
-
         <label for="time">Time</label>
-        <select type="text" id="time" name="time" required>
-          <option value="8:00">8:00 AM</option>
-          <option value="9:00">9:00 AM</option>
-          <option value="10:00">10:00 AM</option>
-          <option value="11:00">11:00 AM</option>
-          <option value="12:00">12:00 PM</option>
-          <option value="13:00">1:00 PM</option>
-          <option value="14:00">2:00 PM</option>
-          <option value="15:00">3:00 PM</option>
-          <option value="16:00">4:00 PM</option>
-          <option value="17:00">5:00 PM</option>
-        </select>
+<select id="time" name="time" required>
+    <option value="8:00">8:00 AM</option>
+    <option value="9:00">9:00 AM</option>
+    <option value="10:00">10:00 AM</option>
+    <option value="11:00">11:00 AM</option>
+    <option value="12:00">12:00 PM</option>
+    <option value="13:00">1:00 PM</option>
+    <option value="14:00">2:00 PM</option>
+    <option value="15:00">3:00 PM</option>
+    <option value="16:00">4:00 PM</option>
+    <option value="17:00">5:00 PM</option>
+</select>
+
+<!-- Error message for the 'time' field -->
+@if($errors->has('time'))
+    <p style="color: red;">{{ $errors->first('time') }}</p>
+@endif
+
+        
+       
+          
 
         <center>
         <button type="button" id="bookButton">Book</button>
@@ -358,7 +349,44 @@
 <!-- Include jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
+{{-- here the date and time coloring --}}
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
+    
+    dateInput.addEventListener('change', function () {
+        const selectedDate = this.value;
 
+        if (selectedDate) {
+            // Fetch booked slots for the selected date
+            fetch(`/appointments/booked-slots?date=${selectedDate}`)
+                .then(response => response.json())
+                .then(bookedSlots => {
+                    // Reset time options
+                    Array.from(timeSelect.options).forEach(option => {
+                        option.disabled = false; // Enable all options
+                        option.style.color = ''; // Reset text color
+                    });
+
+                    // Disable and color booked slots
+                    bookedSlots.forEach(bookedTime => {
+                        const option = Array.from(timeSelect.options).find(opt => opt.value === bookedTime);
+                        if (option) {
+                            option.disabled = true; // Disable booked option
+                            option.style.color = 'red'; // Mark as red
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching booked slots:', error));
+        }
+    });
+});
+
+</script>
+
+
+  
 <script>
   document.addEventListener('DOMContentLoaded', function () {
       const viewButtons = document.querySelectorAll('.view-button modal-button');

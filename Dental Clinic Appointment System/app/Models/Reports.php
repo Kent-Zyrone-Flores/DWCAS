@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reports extends Model
 {
-    protected $fillable = ['title', 'date', 'status',];
+    protected $fillable = [
+        'name',
+        'service',
+        'subservice',
+        'amount',
+        'status',
+        'date',
+        'description',
+    ];
 }
-

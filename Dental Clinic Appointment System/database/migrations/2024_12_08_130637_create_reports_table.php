@@ -10,8 +10,12 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id(); 
-            $table->string('title'); 
+            $table->string('name'); 
             $table->string('status')->default('Pending');
+            $table->string('service');
+            $table->string('subservice');  
+            $table->string('amount');
+            $table->string('description');
             $table->date('date');
             $table->timestamps();
         });

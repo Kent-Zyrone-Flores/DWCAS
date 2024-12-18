@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; // Add this line to import DB facade
 
 class AppointmentController extends Controller
 {
@@ -12,7 +13,6 @@ class AppointmentController extends Controller
         $appointments = Appointment::all();
         return view('user', compact('appointments'));
     }
-
     public function submit(Request $request)
     {
         $incoming_fields = $request->validate([
@@ -24,19 +24,20 @@ class AppointmentController extends Controller
             'date' => 'required',
             'time' => 'required',
         ]);
-
-        // Check for conflicts
+    
+        // Check for conflicts (again on the server-side)
         $existingAppointment = Appointment::where('date', $incoming_fields['date'])
                                            ->where('time', $incoming_fields['time'])
                                            ->first();
-
+    
         if ($existingAppointment) {
             return back()->with('error', 'This time slot is already booked. Please choose another.');
         }
-
+    
         Appointment::create($incoming_fields);
         return redirect()->route('user')->with('success', 'Appointment booked successfully!');
     }
+    
 
     public function index()
     {
@@ -92,7 +93,6 @@ class AppointmentController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to update status']);
         }
     }
-    
 
     public function reschedule(Request $request)
     {
@@ -137,4 +137,46 @@ class AppointmentController extends Controller
         $appointment->delete();
         return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully.');
     }
+
+    public function showAppointmentForm(Request $request)
+    {
+        // Get today's date if no date is provided
+        $date = $request->input('date', date('Y-m-d'));
+    
+        // Get the times that are already taken for the selected date
+        $takenTimes = DB::table('appointments')
+                        ->whereDate('appointment_date', $date)
+                        ->pluck('appointment_time')
+                        ->toArray();
+    
+        return view('appointment.form', compact('takenTimes', 'date'));
+    }
+
+    // public function getBookedSlots(Request $request)
+    // {
+    //     $date = $request->query('date');
+    //     $bookedSlots = Appointment::where('date', $date)
+    //         ->pluck('time')
+    //         ->map(function ($time) {
+    //             return date('H:i', strtotime($time)); // Format time to match option values
+    //         })
+    //         ->toArray();
+    //     return response()->json($bookedSlots);
+    // }
+
+    public function getBookedSlots(Request $request)
+{
+    $request->validate([
+        'date' => 'required|date',
+    ]);
+
+    // Fetch all booked times for the selected date
+    $bookedSlots = Appointment::where('date', $request->date)->pluck('time')->toArray();
+
+    return response()->json($bookedSlots);
+}
+
+
+    
+
 }
