@@ -62,4 +62,4 @@ Route::get('/booked-slots', [AppointmentController::class, 'bookedSlots'])->name
 Route::post('/appointments/reschedule/{id}', [AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 Route::post('/appointments/reschedule', [AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
 Route::post('appointments/{id}/delete', [AppointmentController::class, 'delete'])->name('appointments.delete');
-Route::post('/appointments/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
+Route::post('/appointments/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');    Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
