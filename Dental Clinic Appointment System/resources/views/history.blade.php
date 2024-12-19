@@ -75,7 +75,7 @@
         <div class="nav-links">
             <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
             <a href="{{ route('appointments') }}" class="nav-link">Appointments</a>
-            <a href="{{ route('reports.index') }}" class="nav-link">Reports</a>
+            <a href="{{ route('reports') }}" class="nav-link">Reports</a>
             <a href="{{ route('history') }}" class="nav-link">History</a>
         </div>
         <div class="logout-btn">
@@ -111,7 +111,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Appointment ID</th>
+                        <th>History ID</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Service</th>
@@ -279,30 +279,16 @@ $('#cancelPrintBtn').on('click', function () {
     }
 });
 
-function printReport() {
-    // Clone the history-table element
-    const historyTable = document.querySelector('.history-table').cloneNode(true);
-
-    // Remove the "Action" column from the header
-    const headerRow = historyTable.querySelector('thead tr');
-    headerRow.removeChild(headerRow.lastElementChild); // Remove last column (Action)
-
-    // Remove the "Action" column from the body
-    const bodyRows = historyTable.querySelectorAll('tbody tr');
-    bodyRows.forEach(row => {
-        row.removeChild(row.lastElementChild); // Remove last cell in each row
-    });
-
-    // Prepare the content for printing
-    const content = historyTable.outerHTML;
-    const printWindow = window.open('', '', 'height=400,width=800');
-    printWindow.document.write('<html><head><title>Print Report</title></head><body>');
-    printWindow.document.write(content);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-}
-
+  // Function to print report
+  function printReport() {
+            const content = document.querySelector('.history-table').outerHTML;
+            const printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title>Print Report</title></head><body>');
+            printWindow.document.write(content);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
 
 </script>
 

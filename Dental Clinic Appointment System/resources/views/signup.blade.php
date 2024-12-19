@@ -55,10 +55,6 @@
         <input type="email" id="email" name="email" placeholder="Enter your email" required>
       </div>
       <div class="input-field">
-        <label for="Address">Address</label>
-        <input type="text" id="address" name="address" placeholder="Enter your Address">
-      </div>
-      <div class="input-field">
         <label for="phone">Phone</label>
         <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
       </div>

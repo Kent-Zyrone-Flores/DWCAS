@@ -13,7 +13,6 @@ class Signup extends Model {
         'last_name', 
         'email', 
         'phone',
-        'password',
-        'address',
+        'password'
     ];
 }

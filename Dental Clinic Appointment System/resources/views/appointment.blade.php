@@ -113,7 +113,7 @@
         <div class="nav-links">
             <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
             <a href="{{ route('appointments') }}" class="nav-link">Appointments</a>
-            <a href="{{ route('reports.index') }}" class="nav-link">Reports</a>
+            <a href="{{ route('reports') }}" class="nav-link">Reports</a>
             <a href="{{ route('history') }}" class="nav-link">History</a>
         </div><hr>
         <div class="logout-btn">

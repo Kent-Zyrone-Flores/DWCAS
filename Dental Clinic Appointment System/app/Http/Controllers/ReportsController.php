@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Log;
+
 use App\Models\Reports;
 use Illuminate\Http\Request;
 
@@ -10,74 +10,30 @@ class ReportsController extends Controller
     // Display reports and handle search if a query is provided
     public function index(Request $request)
     {
-        $query = $request->input('search'); // Get the search query
-        $reports = Reports::query();
+        $query = $request->input('search');
+        $reports = Reports::where('title', 'LIKE', "%$query%")
+                          ->orWhere('status', 'LIKE', "%$query%")
+                          ->orWhere('date', 'LIKE', "%$query%")
+                          ->get();
     
-        if ($query) {
-            $reports->where('name', 'LIKE', "%$query%")
-                    ->orWhere('service', 'LIKE', "%$query%")
-                    ->orWhere('subservice', 'LIKE', "%$query%")
-                    ->orWhere('status', 'LIKE', "%$query%")
-                    ->orWhere('date', 'LIKE', "%$query%");
-        }
-    
-        $reports = $reports->get();
-        $noResults = $reports->isEmpty(); // Check if there are no results
-    
-        return view('reports', ['reports' => $reports, 'noResults' => $noResults, 'query' => $query]);
+        return view('reports', ['appointments' => $reports]); // Pass 'appointments' to the view
     }
     
 
-    
+    // Store new report
+    public function store(Request $request)
+    {
+        $incoming_fields = $request->validate([
+            'title' => 'required',
+            'status' => 'required',
+            'date' => 'required',
+        ]);
 
-public function store(Request $request)
-{
-    Log::info($request->all()); // Log all incoming data
-    $validated = $request->validate([
-        'name' => 'required',
-        'service' => 'required',
-        'subservice' => 'required',
-        'amount' => 'required',
-        'status' => 'required',
-        'date' => 'required|date',
-        'description' => 'required',
-    ]);
+        Reports::create($incoming_fields);
 
-    Reports::create($validated);
-
-    return redirect()->route('reports.index')->with('success', 'Report created successfully!');
+        return redirect()->route('reports.index'); // Assuming you have a route named reports.index
+    }
 }
-
-public function update(Request $request, $id)
-{
-    $report = Reports::findOrFail($id);
-
-    $validated = $request->validate([
-        'name' => 'required',
-        'category' => 'required',
-        'subcategory' => 'required',
-        'amount' => 'required',
-        'status' => 'required',
-        'date' => 'required|date',
-        'description' => 'required',
-    ]);
-
-    $report->update($validated);
-
-    return response()->json(['success' => true]);
-}
-
-public function destroy($id)
-{
-    $report = Reports::findOrFail($id);
-    $report->delete();
-
-    return response()->json(['success' => true]);
-}
-
-
-}
-    
 
 
 

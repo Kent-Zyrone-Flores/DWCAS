@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dental World Clinic</title>
   <link rel="stylesheet" href="css/user.css">
-  
 </head>
 <body>
   <nav class="navbaruser">
@@ -17,13 +16,9 @@
             <span>Dental World Clinic</span>
           </a>
         </div>
-        
+
         <ul>
-          <div  class="email"> @if (Auth::check())
-            <p>Hello, {{ Auth::user()->email }}</p>
-        @else
-            <p>Welcome, Guest!</p>
-        @endif</div>
+          
         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
             @csrf
             <button type="submit">Logout</button>
@@ -31,7 +26,13 @@
         </ul>
       </div>
     </nav>
-  </nav>    
+  </nav>
+  <center>
+  <div  class="first_name"> @if (Auth::check())
+            <h2>Hello, {{ Auth::user()->first_name }}</h2>
+        @else
+            <p>Welcome, Guest!</p></center>
+        @endif</div>
   @if (session('success'))
     <div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 10px; border: 1px solid #c3e6cb;">
         {{ session('success') }}
@@ -47,227 +48,125 @@
   <div class="main-container">
     <div class="form-container">
       <h2>Book Appointment</h2>
-      <form method="POST" action="{{ route('user.submit') }}" id="appointmentForm">
-        @csrf
-        <label for="name">Full Name</label>
-                  <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      value="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}" 
-                      placeholder="Full Name" 
-                      required
-                  >
-  
-                  <label for="phone">Contact No.</label>
-                  <input 
-                      type="tel" 
-                      id="phone" 
-                      name="phone" 
-                      value="{{ Auth::user()->phone }}" 
-                      placeholder="Contact Number" 
-                      required
-                  >
-  
-                  <label for="address">Address</label>
-                  <input 
-                      type="text" 
-                      id="address" 
-                      name="address" 
-                      value="{{ Auth::user()->address }}" 
-                      placeholder="Address" 
-                      required
-                  >
+      <form method="POST" action="{{ route('user.submit') }}" id="appointmentForm" enctype="multipart/form-data">
+          @csrf
 
-                  <label for="service">Category</label>
-<select id="service" name="service" required>
-  <option value="">Select Service</option>
-  <option value="General Dentistry">General Dentistry</option>
-  <option value="Orthodontics">Orthodontics</option>
-  <option value="Cosmetic Dentistry">Cosmetic Dentistry</option>
-  <option value="Pediatric Dentistry">Pediatric Dentistry</option>
-  <option value="Specialized Procedures">Specialized Procedures</option>
-</select>
+          <label for="name">Full Name</label>
+          <input
+              type="text"
+              id="name"
+              name="name"
+              value="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}"
+              placeholder="Full Name"
+              required
+          >
+          <label for="phone">Contact No.</label>
+          <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value="{{ Auth::user()->phone }}"
+              placeholder="Contact Number"
+              required
+          >
 
-<br>
+          <label for="address">Address</label>
+          <input
+              type="text"
+              id="address"
+              name="address"
+              value="{{ Auth::user()->address }}"
+              placeholder="Address"
+              required
+          >
 
-<label for="subservice">Sub Category</label>
-<select id="subservice" name="subservice" required>
-  <option value="">Select Subcategory</option>
-</select>
+          <label for="service">Category</label>
+          <select id="service" name="service" required>
+              <option value="">Select Service</option>
+              <option value="General Dentistry">General Dentistry</option>
+              <option value="Orthodontics">Orthodontics</option>
+              <option value="Cosmetic Dentistry">Cosmetic Dentistry</option>
+              <option value="Pediatric Dentistry">Pediatric Dentistry</option>
+              <option value="Specialized Procedures">Specialized Procedures</option>
+          </select>
 
-<script>
-// Define categories, subcategories, and prices
-const serviceData = {
-  "General Dentistry": [
-    { subservice: "Dental Cleaning", price: "₱1,500" },
-    { subservice: "Tooth Extraction", price: "₱2,000" },
-    { subservice: "Filling (Per Tooth)", price: "₱1,200" },
-  ],
-  "Orthodontics": [
-    { subservice: "Braces Installation", price: "₱60,000" },
-    { subservice: "Retainer (Upper or Lower)", price: "₱8,000" },
-    { subservice: "Adjustment (Per Visit)", price: "₱1,500" },
-  ],
-  "Cosmetic Dentistry": [
-    { subservice: "Teeth Whitening", price: "₱5,000" },
-    { subservice: "Veneers (Per Tooth)", price: "₱15,000" },
-    { subservice: "Bonding (Per Tooth)", price: "₱3,000" },
-  ],
-  "Pediatric Dentistry": [
-    { subservice: "Baby Tooth Extraction", price: "₱1,000" },
-    { subservice: "Fluoride Treatment", price: "₱800" },
-    { subservice: "Sealants (Per Tooth)", price: "₱1,200" },
-  ],
-  "Specialized Procedures": [
-    { subservice: "Root Canal Treatment", price: "₱8,000" },
-    { subservice: "Dental Implants", price: "₱100,000" },
-    { subservice: "TMJ Treatment", price: "₱25,000" },
-  ],
-};
+          <br>
 
-// Function to populate subcategory based on category selected
-function updateSubcategory() {
-  const categorySelect = document.getElementById("service");
-  const subcategorySelect = document.getElementById("subservice");
+          <label for="subservice">Sub Category</label>
+          <select id="subservice" name="subservice" required>
+              <option value="">Select Subcategory</option>
+          </select>
 
-  // Clear existing subcategories
-  subcategorySelect.innerHTML = '<option value="">Select Sub Service</option>';
+          <label for="amount">Amount</label>
+          <input type="text" id="amount" name="amount" placeholder="Amount" readonly required>
 
-  const selectedCategory = categorySelect.value;
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
 
-  if (serviceData[selectedCategory]) {
-    serviceData[selectedCategory].forEach(service => {
-      const option = document.createElement("option");
-      option.value = service.subservice;
-      option.textContent = service.subservice;
-      option.dataset.price = service.price;
-      subcategorySelect.appendChild(option);
-    });
-  }
-}
+          <label for="time">Time</label>
+          <select type="text" id="time" name="time" required>
+              <option value="8:00">8:00 AM</option>
+              <option value="9:00">9:00 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="13:00">1:00 PM</option>
+              <option value="14:00">2:00 PM</option>
+              <option value="15:00">3:00 PM</option>
+              <option value="16:00">4:00 PM</option>
+              <option value="17:00">5:00 PM</option>
+          </select>
 
-// Event listener for category dropdown
-document.getElementById("service").addEventListener("change", updateSubcategory);
+          <!-- Payment Button -->
+           <br><br>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal">
+              Payment
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="paymentModalLabel">Payment Details</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <!-- QR Code -->
+                          <div class="text-center mb-3">
+                              <center>
+                                <h3 style="color: blue">GCASH INFORMATION</h3>
+                                <center>
+                                  <h6>0917-885-5153</h6>
+                                  <h6>DR***** A**R</h6>
+                                  <h3 style="color: rgb(250, 6, 6)">or</h3>
+                                <center>
+                                <h6>Scan the QR code below to make a payment:</h6>
+                                  </center>
+                                </center>
+                              <img src="Documentation/qr.png" alt="QR Code" style="max-width: 200px;">
+                          </div>
 
-// Update amount based on subcategory selection
-document.getElementById("subservice").addEventListener("change", function () {
-  const selectedOption = this.options[this.selectedIndex];
-  document.getElementById("amount").value = selectedOption.dataset.price || "";
-});
+                          <!-- Attach Picture -->
+                          <label for="file">Attach Proof</label>
+                          <input
+                              type="file"
+                              id="file"
+                              name="file"
+                              accept="image/png, image/jpeg, image/jpg" />
 
-document.addEventListener('DOMContentLoaded', function () {
-      const viewButtons = document.querySelectorAll('.view-button modal-button');
-      const modal = document.getElementById('appointmentModal');
-      const modalDetails = document.getElementById('modal-details');
-      const closeModal = document.getElementById('closeModal');
-      const cancelModalBtn = document.getElementById('cancelModalBtn');
-      const printDetailsBtn = document.getElementById('printDetailsBtn');
-
-      // Open Modal and Populate Data
-      viewButtons.forEach(button => {
-          button.addEventListener('click', function () {
-              const name = button.getAttribute('data-name');
-              const phone = button.getAttribute('data-phone');
-              const address = button.getAttribute('data-address');
-              const service = button.getAttribute('data-service');
-              const amount = button.getAttribute('data-amount');
-              const date = button.getAttribute('data-date');
-              const time = button.getAttribute('data-time');
-              const status = button.getAttribute('data-status');
-
-              const detailsHTML = `
-                  <p><strong>Name:</strong> ${name}</p>
-                  <p><strong>Phone:</strong> ${phone}</p>
-                  <p><strong>Address:</strong> ${address}</p>
-                  <p><strong>Service:</strong> ${service}</p>
-                  <p><strong>Amount:</strong> ${amount}</p>
-                  <p><strong>Date:</strong> ${date}</p>
-                  <p><strong>Time:</strong> ${time}</p>
-                  <p><strong>Status:</strong> ${status}</p>
-              `;
-
-              modalDetails.innerHTML = detailsHTML;
-              modal.style.display = 'flex';
-          });
-      });
-
-      // Close Modal
-      closeModal.addEventListener('click', () => modal.style.display = 'none');
-      cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
-
-      // Print Details
-      printDetailsBtn.addEventListener('click', function () {
-          const printContent = modalDetails.innerHTML;
-          const originalContent = document.body.innerHTML;
-
-          document.body.innerHTML = `
-              <div style="text-align: center; font-family: Arial, sans-serif;">
-                  <h2>Dental Clinic Appointment</h2>
-                  <div style="text-align: left; margin-left: 20px;">${printContent}</div>
+                      </div>
+                      <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit1" id="bookButton">Book</button>
+                        {{-- <button type="button" class="btn btn-primary">Submit</button> --}}
+                      </div>
+                  </div>
               </div>
-          `;
-          window.print();
-          document.body.innerHTML = originalContent;
-          window.location.reload();
-      });
-
-      // Close Modal on Outside Click
-      window.addEventListener('click', function (e) {
-          if (e.target === modal) modal.style.display = 'none';
-      });
-  });
-
-
-  
-</script>
-
-
-        <label for="amount">Amount</label>
-        <input type="text" id="amount" name="amount" placeholder="Amount" readonly required>
-
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" min="{{ date('Y-m-d') }}" required>
-        
-{{-- 
-    <script>
-        // Set today's date as the minimum selectable date
-        document.addEventListener('DOMContentLoaded', function () {
-            const dateInput = document.getElementById('date');
-            const today = new Date();
-
-            // Format the date as YYYY-MM-DD
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const minDate = `${year}-${month}-${day}`;
-            dateInput.setAttribute('min', minDate);
-        });
-    </script> --}}
-
-
-        <label for="time">Time</label>
-        <select type="text" id="time" name="time" required>
-          <option value="8:00">8:00 AM</option>
-          <option value="9:00">9:00 AM</option>
-          <option value="10:00">10:00 AM</option>
-          <option value="11:00">11:00 AM</option>
-          <option value="12:00">12:00 PM</option>
-          <option value="13:00">1:00 PM</option>
-          <option value="14:00">2:00 PM</option>
-          <option value="15:00">3:00 PM</option>
-          <option value="16:00">4:00 PM</option>
-          <option value="17:00">5:00 PM</option>
-        </select>
-
-        <center>
-        <button type="submit" id="bookButton">Book</button>
-        </center>
+          </div>
       </form>
-    </div>
+  </div>
 
-    
+
     <div class="booking-container">
       <h2>Booking Appointments</h2>
       <table class="appointment-table" id="bookingTable">
@@ -298,26 +197,24 @@ document.addEventListener('DOMContentLoaded', function () {
                   <td>{{ date('h:i A', strtotime($appointment->time)) }}</td>
                   <td>{{ $appointment->status }}</td>
                   <td>
-                      <button 
-                          class="cancel-button modal-button" 
+                      <button
+                          class="cancel-button modal-button"
                           onclick="removeRow(this, '{{ $appointment->id }}')"
                       >
                           Cancel
                       </button>
-                      <button 
-                          class="view-button modal-button" 
-                          data-name="{{ $appointment->name }}"
-                          data-phone="{{ $appointment->phone }}"
-                          data-address="{{ $appointment->address }}"
-                          data-service="{{ $appointment->service }}"
-                          data-amount="{{ $appointment->amount }}"
-                          data-date="{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}"
-                          data-time="{{ date('h:i A', strtotime($appointment->time)) }}"
-                          data-status="{{ $appointment->status }}"
-                      >
-                          View
-                      </button>
-                      <button class="printReceiptButton">Print Receipt</button>
+                      <button class="view-button modal-button"
+                data-name="{{ $appointment->name }}"
+                data-phone="{{ $appointment->phone }}"
+                data-address="{{ $appointment->address }}"
+                data-service="{{ $appointment->service }}"
+                data-amount="{{ $appointment->amount }}"
+                data-date="{{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}"
+                data-time="{{ date('h:i A', strtotime($appointment->time)) }}"
+                data-status="{{ $appointment->status }}"
+                onclick="openViewModal(this)">
+                View
+            </button>
 
                   </td>
               </tr>
@@ -325,31 +222,208 @@ document.addEventListener('DOMContentLoaded', function () {
           </tbody>
       </table>
   </div>
+
+  <!-- Modal Structure -->
+<div class="modal" id="viewAppointmentModal" style="display: none;">
+  <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h4>Appointment Details</h4>
+      <p><strong>Name:</strong> <span id="modalName"></span></p>
+      <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+      <p><strong>Address:</strong> <span id="modalAddress"></span></p>
+      <p><strong>Service:</strong> <span id="modalService"></span></p>
+      <p><strong>Sub Service:</strong> <span id="modalSubservice"></span></p>
+      <p><strong>Amount:</strong> <span id="modalAmount"></span></p>
+      <p><strong>Date:</strong> <span id="modalDate"></span></p>
+      <p><strong>Time:</strong> <span id="modalTime"></span></p>
+      <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+      <button type="button" class="btn btn-secondary" id="printButton">Print</button>
+      <button type="button" class="btn btn-primary" id="closeButton">Close</button>
+  </div>
+</div>
+
 <!-- Include jsPDF and QRCode.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<!-- Bootstrap CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Define categories, subcategories, and prices
+  const serviceData = {
+    "General Dentistry": [
+      { subservice: "Dental Cleaning", price: "₱1,500" },
+      { subservice: "Tooth Extraction", price: "₱2,000" },
+      { subservice: "Filling (Per Tooth)", price: "₱1,200" },
+    ],
+    "Orthodontics": [
+      { subservice: "Braces Installation", price: "₱60,000" },
+      { subservice: "Retainer (Upper or Lower)", price: "₱8,000" },
+      { subservice: "Adjustment (Per Visit)", price: "₱1,500" },
+    ],
+    "Cosmetic Dentistry": [
+      { subservice: "Teeth Whitening", price: "₱5,000" },
+      { subservice: "Veneers (Per Tooth)", price: "₱15,000" },
+      { subservice: "Bonding (Per Tooth)", price: "₱3,000" },
+    ],
+    "Pediatric Dentistry": [
+      { subservice: "Baby Tooth Extraction", price: "₱1,000" },
+      { subservice: "Fluoride Treatment", price: "₱800" },
+      { subservice: "Sealants (Per Tooth)", price: "₱1,200" },
+    ],
+    "Specialized Procedures": [
+      { subservice: "Root Canal Treatment", price: "₱8,000" },
+      { subservice: "Dental Implants", price: "₱100,000" },
+      { subservice: "TMJ Treatment", price: "₱25,000" },
+    ],
+  };
+
+  // Function to populate subcategory based on category selected
+  function updateSubcategory() {
+    const categorySelect = document.getElementById("service");
+    const subcategorySelect = document.getElementById("subservice");
+
+    // Clear existing subcategories
+    subcategorySelect.innerHTML = '<option value="">Select Sub Service</option>';
+
+    const selectedCategory = categorySelect.value;
+
+    if (serviceData[selectedCategory]) {
+      serviceData[selectedCategory].forEach(service => {
+        const option = document.createElement("option");
+        option.value = service.subservice;
+        option.textContent = service.subservice;
+        option.dataset.price = service.price;
+        subcategorySelect.appendChild(option);
+      });
+    }
+  }
+
+  // Event listener for category dropdown
+  document.getElementById("service").addEventListener("change", updateSubcategory);
+
+  // Update amount based on subcategory selection
+  document.getElementById("subservice").addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    document.getElementById("amount").value = selectedOption.dataset.price || "";
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+        const viewButtons = document.querySelectorAll('.view-button modal-button');
+        const modal = document.getElementById('appointmentModal');
+        const modalDetails = document.getElementById('modal-details');
+        const closeModal = document.getElementById('closeModal');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const printDetailsBtn = document.getElementById('printDetailsBtn');
+
+        // Open Modal and Populate Data
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const name = button.getAttribute('data-name');
+                const phone = button.getAttribute('data-phone');
+                const address = button.getAttribute('data-address');
+                const service = button.getAttribute('data-service');
+                const amount = button.getAttribute('data-amount');
+                const date = button.getAttribute('data-date');
+                const time = button.getAttribute('data-time');
+                const status = button.getAttribute('data-status');
+
+                const detailsHTML = `
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Phone:</strong> ${phone}</p>
+                    <p><strong>Address:</strong> ${address}</p>
+                    <p><strong>Service:</strong> ${service}</p>
+                    <p><strong>Amount:</strong> ${amount}</p>
+                    <p><strong>Date:</strong> ${date}</p>
+                    <p><strong>Time:</strong> ${time}</p>
+                    <p><strong>Status:</strong> ${status}</p>
+                `;
+
+                modalDetails.innerHTML = detailsHTML;
+                modal.style.display = 'flex';
+            });
+        });
+
+        // Close Modal
+        closeModal.addEventListener('click', () => modal.style.display = 'none');
+        cancelModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+        // Print Details
+        printDetailsBtn.addEventListener('click', function () {
+            const printContent = modalDetails.innerHTML;
+            const originalContent = document.body.innerHTML;
+
+            document.body.innerHTML = `
+                <div style="text-align: center; font-family: Arial, sans-serif;">
+                    <h2>Dental Clinic Appointment</h2>
+                    <div style="text-align: left; margin-left: 20px;">${printContent}</div>
+                </div>
+            `;
+            window.print();
+            document.body.innerHTML = originalContent;
+            window.location.reload();
+        });
+
+        // Close Modal on Outside Click
+        window.addEventListener('click', function (e) {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+    });
+
+ // Close the modal when the 'Close' button is clicked
+ document.getElementById('closeButton').addEventListener('click', function() {
+        document.getElementById('viewAppointmentModal').style.display = 'none';
+    });
+
+  </script>
 
 <script>
-  // Function to generate and print PDF for a specific booking
-  function generatePDF(row) {
+  // Open the modal and populate it with appointment details
+function openViewModal(button) {
+    // Get the data attributes from the button
+    var name = button.getAttribute('data-name');
+    var phone = button.getAttribute('data-phone');
+    var address = button.getAttribute('data-address');
+    var service = button.getAttribute('data-service');
+    var amount = button.getAttribute('data-amount');
+    var date = button.getAttribute('data-date');
+    var time = button.getAttribute('data-time');
+    var status = button.getAttribute('data-status');
+
+    // Set the modal content with the data
+    document.getElementById('modalName').innerText = name;
+    document.getElementById('modalPhone').innerText = phone;
+    document.getElementById('modalAddress').innerText = address;
+    document.getElementById('modalService').innerText = service;
+    document.getElementById('modalAmount').innerText = amount;
+    document.getElementById('modalDate').innerText = date;
+    document.getElementById('modalTime').innerText = time;
+    document.getElementById('modalStatus').innerText = status;
+
+    // Show the modal
+    document.getElementById('viewAppointmentModal').style.display = 'block';
+}
+
+// Close the modal when the close button is clicked
+document.getElementById('closeModal').addEventListener('click', function() {
+    document.getElementById('viewAppointmentModal').style.display = 'none';
+});
+
+// Function to generate and print PDF for a specific booking
+function generatePDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
 
-    // Extract data from the row
-    const name = row.cells[0].innerText;
-    const phone = row.cells[1].innerText;
-    const service = row.cells[3].innerText;
-    const subservice = row.cells[4].innerText;
-    const date = row.cells[6].innerText;
-    const amount = row.cells[5].innerText;
+    const name = document.getElementById('modalName').innerText;
+    const phone = document.getElementById('modalPhone').innerText;
+    const service = document.getElementById('modalService').innerText;
+    const amount = document.getElementById('modalAmount').innerText;
+    const date = document.getElementById('modalDate').innerText;
 
-    // Clinic Details
     const clinicName = "Dental World Clinic";
     const clinicAddress = "Poblacion, Tagoloan Misamis Oriental, 9001";
     const clinicContact = "Contact: 0917-885-5153";
-
-    // Logo URL (ensure the image path is publicly accessible)
-    const logoUrl = "Documentation/logo.png"; 
+    const logoUrl = "Documentation/logo.png";
     pdf.addImage(logoUrl, 'PNG', 10, 10, 30, 30);
 
     pdf.setFontSize(18);
@@ -363,52 +437,41 @@ document.addEventListener('DOMContentLoaded', function () {
     pdf.setFontSize(14);
     pdf.text("Booking Successful", 105, 50, null, null, "center");
 
-    // Add appointment details
     const details = [
-      { label: "Name", value: name },
-      { label: "Phone", value: phone },
-      { label: "Service", value: service },
-      { label: "Sub Service", value: subservice },
-      { label: "Date", value: date },
-      { label: "Amount", value: amount }
+        { label: "Name", value: name },
+        { label: "Phone", value: phone },
+        { label: "Service", value: service },
+        { label: "Amount", value: amount },
+        { label: "Date", value: date }
     ];
 
     let yPos = 60;
     pdf.setFontSize(12);
     details.forEach(item => {
-      pdf.setFont("helvetica", "bold");
-      pdf.text(`${item.label}:`, 20, yPos);
-      pdf.setFont("helvetica", "normal");
-      pdf.text(`${item.value}`, 60, yPos);
-      yPos += 8;
+        pdf.setFont("helvetica", "bold");
+        pdf.text(`${item.label}:`, 20, yPos);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(`${item.value}`, 60, yPos);
+        yPos += 8;
     });
 
-    // Generate QR code for the booking (could encode the booking ID or receipt info)
-    const qrCodeData = `Name: ${name}\nService: ${service}\nSub Service: ${subservice}\nDate: ${date}\nAmount: ${amount}`;
+    // Generate QR code for the booking
+    const qrCodeData = `Name: ${name}\nService: ${service}\nDate: ${date}\nAmount: ${amount}`;
     QRCode.toDataURL(qrCodeData, { width: 100, margin: 2 }, (err, url) => {
-      if (err) {
-        console.error(err);
-      } else {
-        // Add QR Code to PDF
-        pdf.addImage(url, 'PNG', 150, 60, 50, 50);
-        
-        // Save the generated PDF
-        pdf.setFontSize(10);
-        pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 20, null, null, "center");
-        pdf.save(`${name}_booking_receipt.pdf`);
-      }
+        if (err) {
+            console.error(err);
+        } else {
+            pdf.addImage(url, 'PNG', 150, 60, 50, 50);
+            pdf.setFontSize(10);
+            pdf.text("Thank you for choosing Dental World Clinic!", 105, yPos + 20, null, null, "center");
+            pdf.save(`${name}_booking_receipt.pdf`);
+        }
     });
-  }
+}
 
-  // Add event listener to all "Print Receipt" buttons in table rows
-  document.querySelectorAll('.printReceiptButton').forEach(button => {
-    button.addEventListener('click', function() {
-      // Get the parent row (tr) of the button clicked
-      const row = this.closest('tr');
-      // Call function to generate and print PDF for that row's data
-      generatePDF(row);
-    });
-  });
+// Attach the print functionality to the button
+document.getElementById('printButton').addEventListener('click', generatePDF);
+
 </script>
 
 <!-- Modal -->
@@ -428,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </div>
 
-  
+
 
 
   </div>
@@ -508,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const row = button.closest('tr');
 
       // Send an HTTP request to the backend to delete the record
-      fetch(`/appointments/${id}`, {
+      fetch(`/appointments/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
@@ -535,9 +598,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   <!-- Include QRCode.js -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  
+
   <script>
-   
+
   </script>
 
 

@@ -19,7 +19,6 @@ class SignupController extends Controller {
             'last_name' => 'required',
             'email' => 'required|email|unique:signups,email', // Ensure email is unique
             'phone' => 'required',
-            'address' => 'required',
             'password' => 'required', // Add minimum password length for security
         ]);
 
